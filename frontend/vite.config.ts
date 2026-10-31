@@ -25,7 +25,6 @@ const banner = (mode: string, env: Record<string, string>): Plugin => ({
           `  ◆ Environment       ${mode}`,
           `  ◆ Local             ${local}`,
           `  ◆ Backend API       ${env.VITE_API_BASE_URL || 'http://localhost:4000'}`,
-          `  ◆ AI Hub            ${env.VITE_ENABLE_AI_HUB === 'true' ? '✓ enabled' : '✗ disabled'}`,
           `  ◆ Started           ${started}`,
           '──────────────────────────────────────────────',
           '',
@@ -61,9 +60,6 @@ export default defineConfig(({ mode }) => {
             }
             if (id.includes('node_modules/lucide-react/') || id.includes('node_modules/@radix-ui/')) {
               return 'vendor-ui';
-            }
-            if (id.includes('/components/ai-hub/') || id.includes('/pages/AIPropertyHubPage')) {
-              return 'chunk-ai-hub';
             }
           },
         },

@@ -2,7 +2,7 @@
 
 # BuildEstate — Frontend 🌐
 
-_The user-facing website of BuildEstate — browse & list properties, book viewings, and search live listings with AI._
+_The user-facing website of BuildEstate — browse properties and book viewings._
 
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -21,9 +21,6 @@ _The user-facing website of BuildEstate — browse & list properties, book viewi
 <div align="center">
   <img src="../Image/Home_page.png" alt="BuildEstate homepage" width="100%" />
   <br/><br/>
-  <img src="../Image/Ai_hub_property_result.png" alt="AI Property Hub results" width="48%" />
-  &nbsp;&nbsp;
-  <img src="../Image/User_dashboard.png" alt="User dashboard" width="48%" />
 </div>
 
 ---
@@ -32,11 +29,8 @@ _The user-facing website of BuildEstate — browse & list properties, book viewi
 
 - **Property Browsing** — Filter by type, price, availability, and amenities with interactive grid/list views.
 - **Property Details** — Comprehensive image gallery, amenities list, and integrated appointment booking.
-- **User Authentication** — Secure sign up, log in, email verification, and password recovery.
-- **User Dashboard & Listings** — Registered users can list their own property for sale/rent and track its review status.
-- **Appointment Booking** — Schedule property viewings as a guest or authenticated user.
-- **AI Property Hub** — Search live listings scraped from 99acres, MagicBricks & NoBroker; AI ranks results with match scores, value verdicts, and red flags. Model is selectable (GLM, Nemotron & more); you only need a free Firecrawl key.
-- **Location Trends** — AI-analyzed price per sq.ft, rental yields, and appreciation outlook per locality.
+- **Appointment Booking** — Visitors can schedule property viewings.
+- **Admin-managed Listings** — Property management and listing review are handled in the separate admin app.
 - **SEO Optimized** — Built-in structured data generation, sitemap mapping, `robots.txt`, and per-page meta tags.
 - **Page Transitions** — Fluid UI animations powered by Framer Motion.
 
@@ -48,7 +42,6 @@ _The user-facing website of BuildEstate — browse & list properties, book viewi
 | -------------------- | -------------------------------- |
 | **Framework**        | React 18.3 + TypeScript + Vite 6 |
 | **Styling**          | Tailwind CSS v4 + PostCSS        |
-| **State Management** | React Context API                |
 | **Routing**          | React Router v7                  |
 | **HTTP Client**      | Axios                            |
 | **Animations**       | Framer Motion                    |
@@ -80,11 +73,7 @@ Create or edit `frontend/.env.local`:
 # Required — points to your backend API
 VITE_API_BASE_URL=http://localhost:4000
 
-# Optional — set to "true" to enable AI Property Hub locally
-VITE_ENABLE_AI_HUB=true
 ```
-
-> **Note:** Do not set `VITE_ENABLE_AI_HUB` on Vercel. Leaving it unset disables the aggressive AI Hub fetching on the live site (saving API credits) and presents a localized "run locally" modal instead.
 
 </details>
 
@@ -103,22 +92,13 @@ Frontend runs at **http://localhost:5173**
 
 ## 🗺️ Page Routing
 
-| Page            | Route                | Description                                                |
-| --------------- | -------------------- | ---------------------------------------------------------- |
-| Home            | `/`                  | Hero section, featured properties, about snippets          |
-| Properties      | `/properties`        | Browse catalog with robust interactive filters             |
-| Property Detail | `/property/:id`      | Full multimedia details and booking capabilities           |
-| AI Property Hub | `/ai-hub`            | Live-scraped AI search with model selector (local env only)|
-| User Dashboard  | `/dashboard`         | Personal dashboard — stats, listings, appointments         |
-| My Listings     | `/my-listings`       | Manage your submitted property listings                    |
-| Add Property    | `/add-property`      | List your own property for sale/rent                       |
-| About           | `/about`             | Team overview and company information                      |
-| Contact         | `/contact`           | User contact form submission                               |
-| Sign In         | `/signin`            | Authenticate user                                          |
-| Sign Up         | `/signup`            | Register new user                                          |
-| Forgot Password | `/forgot-password`   | Password reset request pipeline                            |
-| Reset Password  | `/reset/:token`      | Set a new password from the emailed link                   |
-| Verify Email    | `/verify-email/:token` | Email verification after registration                    |
+| Page            | Route         | Description                                    |
+| --------------- | ------------- | ---------------------------------------------- |
+| Home            | `/`           | Featured properties and company information   |
+| Properties      | `/properties` | Browse catalog with interactive filters       |
+| Property Detail | `/property/:id` | Property details and appointment booking    |
+| About           | `/about`      | Team overview and company information         |
+| Contact         | `/contact`    | Contact form submission                       |
 
 ---
 
@@ -130,14 +110,12 @@ Frontend runs at **http://localhost:5173**
 ```text
 frontend/src/
 ├── components/
-│   ├── ai-hub/           → AI Property Hub functional components
 │   ├── common/           → Universal elements (Navbar, Footer, SEO, PageTransition)
 │   ├── home/             → Modular Homepage sections
 │   ├── properties/       → Filter sidebar, property cards, catalog layouts
 │   ├── property-details/ → Multimedia gallery, amenities parser, booking form
 │   ├── about/            → About page subsections
 │   └── contact/          → Contact interface
-├── contexts/             → Global React Context (e.g., AuthContext)
 ├── hooks/                → Custom React utilities (e.g., useSEO)
 ├── pages/                → Complete route components (Lazy-loaded)
 ├── services/             → Centralized network interface (`api.ts` Axios wrapper)
@@ -167,8 +145,7 @@ frontend/src/
 2. Import the repository into [Vercel](https://vercel.com).
 3. Set **Root Directory** to `frontend`.
 4. Inject environment variable: `VITE_API_BASE_URL` mapped to your Render backend URL.
-5. **Critically:** Do not set `VITE_ENABLE_AI_HUB` in Vercel to preserve limits.
-6. Trigger Deploy.
+5. Trigger Deploy.
 
 Currently live at: **https://buildestate.vercel.app**
 

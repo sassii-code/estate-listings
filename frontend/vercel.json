@@ -47,9 +47,6 @@
   "redirects": [
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/properties-listing", "destination": "/properties", "permanent": true },
-    { "source": "/login", "destination": "/signin", "permanent": true },
-    { "source": "/ai-property-hub", "destination": "/ai-hub", "permanent": true },
-    { "source": "/ai-agent", "destination": "/ai-hub", "permanent": true },
     { "source": "/contact-us", "destination": "/contact", "permanent": true },
     { "source": "/about-us", "destination": "/about", "permanent": true },
     { "source": "/properties/single/:id", "destination": "/property/:id", "permanent": true }

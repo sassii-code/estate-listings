@@ -7,7 +7,6 @@ const BACKEND_URL = process.env.VITE_API_BASE_URL || 'https://buildestate-backen
 const STATIC_PAGES = [
   { url: '/',           changefreq: 'weekly',  priority: '1.0' },
   { url: '/properties', changefreq: 'daily',   priority: '0.9' },
-  { url: '/ai-hub',     changefreq: 'weekly',  priority: '0.8' },
   { url: '/about',      changefreq: 'monthly', priority: '0.7' },
   { url: '/contact',    changefreq: 'monthly', priority: '0.7' },
 ];

@@ -20,11 +20,11 @@ const CTASection: React.FC = () => {
           Ready to Find Your Dream Home?
         </h2>
         <p className="font-manrope font-light text-xl text-white/90 mb-10 max-w-[680px] mx-auto">
-          Join thousands of satisfied homeowners who found their perfect property with BuildEstate's AI-powered platform.
+          Browse available properties and book a viewing with the BuildEstate team.
         </p>
         <div className="flex gap-4 justify-center">
-          <Link to="/signup" className="bg-white text-[#C05621] font-manrope font-bold text-lg px-10 py-4 rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all inline-block">
-            Get Started
+          <Link to="/properties" className="bg-white text-[#C05621] font-manrope font-bold text-lg px-10 py-4 rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all inline-block">
+            Browse Properties
           </Link>
           <Link to="/contact" className="border-2 border-white text-white font-manrope font-bold text-lg px-10 py-4 rounded-xl hover:bg-white hover:text-[#C05621] transition-all inline-block">
             Schedule a Demo

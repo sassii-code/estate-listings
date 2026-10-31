@@ -87,14 +87,13 @@ const HeroSection: React.FC = () => {
               {/* Heading */}
               <motion.h1 data-speakable variants={itemVariants} className="font-fraunces text-[56px] lg:text-[70px] leading-[1.1] text-[#111827] mb-8">
                 Discover Your<br />
-                <span className="italic text-[#D4755B]">Dream Home</span> with<br />
-                AI Intelligence
+                <span className="italic text-[#D4755B]">Dream Home</span>
               </motion.h1>
 
               {/* Description */}
               <motion.p data-speakable variants={itemVariants} className="font-manrope font-light text-xl leading-7 text-[#4b5563] mb-12 max-w-[676px]">
-                Find flats, villas, and apartments in Mumbai, Delhi, Bangalore, Ahmedabad, and Pune.
-                BuildEstate uses AI-powered search and live market analysis to match you with the right property.
+                Browse flats, villas, and apartments in Mumbai, Delhi, Bangalore, Ahmedabad, and Pune.
+                Explore available properties and book a viewing directly through BuildEstate.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -102,10 +101,6 @@ const HeroSection: React.FC = () => {
                 <Link to="/properties" className="bg-[#D4755B] text-white font-manrope font-bold text-lg px-8 py-4 rounded-xl shadow-[0px_10px_15px_-3px_rgba(212,117,91,0.25),0px_4px_6px_-4px_rgba(212,117,91,0.25)] hover:bg-[#B86851] transition-all hover:shadow-xl inline-flex items-center">
                   Explore Properties
                   <span className="font-material-icons text-sm ml-2" aria-hidden="true">arrow_forward</span>
-                </Link>
-                <Link to="/ai-hub" className="border-2 border-[#d1d5db] text-[#374151] font-manrope font-bold text-lg px-8 py-4 rounded-xl hover:border-[#D4755B] hover:text-[#D4755B] transition-all inline-flex items-center">
-                  <span className="font-material-icons text-2xl text-[#D4755B] mr-2" aria-hidden="true">smart_toy</span>
-                  {import.meta.env.PROD ? 'AI Property Hub' : 'Try AI Search'}
                 </Link>
               </motion.div>
 

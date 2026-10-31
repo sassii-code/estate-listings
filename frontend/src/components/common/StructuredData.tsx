@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 const SITE_URL = 'https://buildestate.vercel.app';
 
 interface StructuredDataProps {
-  type: 'website' | 'organization' | 'property' | 'aiHub' | 'localBusiness' | 'breadcrumb' | 'faqPage' | 'howTo' | 'speakable';
+  type: 'website' | 'organization' | 'property' | 'localBusiness' | 'breadcrumb' | 'faqPage' | 'howTo' | 'speakable';
   data?: {
     // property listing
     title?: string;
@@ -43,7 +43,7 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@id': `${SITE_URL}/#website`,
       name: 'BuildEstate',
       url: SITE_URL,
-      description: 'AI-powered luxury real estate platform for finding your perfect property in India.',
+      description: 'Real estate platform for finding your perfect property in India.',
       potentialAction: {
         '@type': 'SearchAction',
         target: `${SITE_URL}/properties?q={search_term_string}`,
@@ -75,7 +75,7 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@type': 'LocalBusiness',
       '@id': `${SITE_URL}/#localbusiness`,
       name: 'BuildEstate',
-      description: 'AI-powered real estate platform for finding luxury properties in India.',
+      description: 'Real estate platform for finding properties in India.',
       url: SITE_URL,
       logo: `${SITE_URL}/logo.png`,
       image: `${SITE_URL}/og-image.png`,
@@ -113,21 +113,6 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       ...(data?.baths && { numberOfBathroomsTotal: data.baths }),
     },
 
-    aiHub: {
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'AI Property Hub - BuildEstate',
-      applicationCategory: 'RealEstateApplication',
-      description: 'AI-powered real estate analytics, property search, and investment insights.',
-      url: `${SITE_URL}/ai-hub`,
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock',
-      },
-    },
-
     breadcrumb: {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -163,7 +148,7 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@context': 'https://schema.org',
       '@type': 'HowTo',
       name: data?.howToName || 'How to Buy Property with BuildEstate',
-      description: data?.howToDescription || 'AI-assisted steps to find and buy your perfect home in India.',
+      description: data?.howToDescription || 'Steps to find and buy your perfect home in India.',
       step: (data?.steps || []).map((step) => ({
         '@type': 'HowToStep',
         name: step.name,
