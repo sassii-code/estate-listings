@@ -1,10 +1,11 @@
 import fs from "fs";
 import imagekit from "../config/imagekit.js";
 import Property from "../models/propertyModel.js";
+import { parsePropertyFields } from "../utils/propertyFields.js";
 
 const addproperty = async (req, res) => {
     try {
-        const { title, location, price, beds, baths, sqft, type, availability, description, amenities, phone, googleMapLink } = req.body;
+        const fields = parsePropertyFields(req.body);
 
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -30,19 +31,9 @@ const addproperty = async (req, res) => {
 
         // Create a new product
         const product = new Property({
-            title,
-            location,
-            price,
-            beds,
-            baths,
-            sqft,
-            type,
-            availability,
-            description,
-            amenities,
+            ...fields,
             image: imageUrls,
-            phone,
-            googleMapLink: googleMapLink || ''
+            reviewStatus: "active",
         });
 
         // Save the product to the database
@@ -51,7 +42,7 @@ const addproperty = async (req, res) => {
         res.json({ message: "Product added successfully", success: true });
     } catch (error) {
         console.log("Error adding product: ", error);
-        res.status(500).json({ message: "Server Error", success: false });
+        res.status(error.statusCode || 500).json({ message: error.message || "Server Error", success: false });
     }
 };
 
@@ -62,11 +53,12 @@ const listproperty = async (req, res) => {
         const limit = parseInt(req.query.limit) || 20; // Default 20 per page
         const skip = (page - 1) * limit;
 
-        // Only return active properties publicly.
-        // Legacy admin-added documents that pre-date the status field are also
-        // included via the $exists check so they are not accidentally hidden.
         const query = {
-            $or: [{ status: 'active' }, { status: { $exists: false } }],
+            $or: [
+                { reviewStatus: "active" },
+                { reviewStatus: { $exists: false }, status: "active" },
+                { reviewStatus: { $exists: false }, status: { $exists: false } },
+            ],
         };
 
         // Get total count for pagination metadata
@@ -112,31 +104,12 @@ const removeproperty = async (req, res) => {
 
 const updateproperty = async (req, res) => {
     try {
-        const { id, title, location, price, beds, baths, sqft, type, availability, description, amenities, phone, googleMapLink } = req.body;
+        const { id } = req.body;
+        const fields = parsePropertyFields(req.body);
 
         const property = await Property.findById(id);
         if (!property) {
-            console.log("Property not found with ID:", id); // Debugging line
             return res.status(404).json({ message: "Property not found", success: false });
-        }
-
-        if (!req.files) {
-            // No new images provided
-            property.title = title;
-            property.location = location;
-            property.price = price;
-            property.beds = beds;
-            property.baths = baths;
-            property.sqft = sqft;
-            property.type = type;
-            property.availability = availability;
-            property.description = description;
-            property.amenities = amenities;
-            property.phone = phone;
-            property.googleMapLink = googleMapLink || '';
-            // Keep existing images
-            await property.save();
-            return res.json({ message: "Property updated successfully", success: true });
         }
 
         const image1 = req.files.image1 && req.files.image1[0];
@@ -161,25 +134,14 @@ const updateproperty = async (req, res) => {
             })
         );
 
-        property.title = title;
-        property.location = location;
-        property.price = price;
-        property.beds = beds;
-        property.baths = baths;
-        property.sqft = sqft;
-        property.type = type;
-        property.availability = availability;
-        property.description = description;
-        property.amenities = amenities;
-        property.image = imageUrls;
-        property.phone = phone;
-        property.googleMapLink = googleMapLink || '';
+        Object.assign(property, fields);
+        if (imageUrls.length) property.image = imageUrls;
 
         await property.save();
         res.json({ message: "Property updated successfully", success: true });
     } catch (error) {
         console.log("Error updating product: ", error);
-        res.status(500).json({ message: "Server Error", success: false });
+        res.status(error.statusCode || 500).json({ message: error.message || "Server Error", success: false });
     }
 };
 
@@ -192,7 +154,8 @@ const singleproperty = async (req, res) => {
         }
         // Block public access to listings that are not yet approved or have been
         // rejected/expired. Legacy docs without a status field are always visible.
-        if (property.status && property.status !== 'active') {
+        const reviewStatus = property.reviewStatus || property.status;
+        if (["pending", "rejected", "expired"].includes(reviewStatus)) {
             return res.status(404).json({ message: "Property not found", success: false });
         }
         res.json({ property, success: true });

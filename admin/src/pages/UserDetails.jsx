@@ -381,12 +381,12 @@ const UserDetailsPage = () => {
                           <h4 className="font-semibold text-[#1C1B1A] line-clamp-2">{property.title}</h4>
                           <span className={cn(
                             "px-2 py-1 rounded-full text-xs font-medium",
-                            property.status === 'active' && "bg-emerald-50 text-emerald-700",
-                            property.status === 'pending' && "bg-amber-50 text-amber-700",
-                            property.status === 'rejected' && "bg-red-50 text-red-700",
-                            property.status === 'expired' && "bg-gray-50 text-gray-700"
+                            property.reviewStatus === 'active' && "bg-emerald-50 text-emerald-700",
+                            property.reviewStatus === 'pending' && "bg-amber-50 text-amber-700",
+                            property.reviewStatus === 'rejected' && "bg-red-50 text-red-700",
+                            property.reviewStatus === 'expired' && "bg-gray-50 text-gray-700"
                           )}>
-                            {property.status}
+                            {property.reviewStatus || 'active'}
                           </span>
                         </div>
                         <div className="space-y-2 text-sm text-[#5A5856]">

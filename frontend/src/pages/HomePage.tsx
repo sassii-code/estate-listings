@@ -6,7 +6,6 @@ import StructuredData from '../components/common/StructuredData';
 import HeroSection from '../components/home/HeroSection';
 import StatsSection from '../components/home/StatsSection';
 import AIIntelligenceSection from '../components/home/AIIntelligenceSection';
-import CuratedListingsSection from '../components/home/CuratedListingsSection';
 import ProcessSection from '../components/home/ProcessSection';
 import TrustSignalsSection from '../components/home/TrustSignalsSection';
 import TestimonialsSection from '../components/home/TestimonialsSection';
@@ -50,9 +49,6 @@ const HomePage: React.FC = () => {
 
       {/* AI Intelligence Section */}
       <AIIntelligenceSection />
-
-      {/* Curated Listings Section */}
-      <CuratedListingsSection />
 
       {/* The Path to Your New Beginning Section */}
       <ProcessSection />

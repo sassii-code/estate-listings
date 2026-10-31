@@ -9,13 +9,16 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from "../services/apiClient";
 import { cn, formatPrice } from "../lib/utils";
+import { formatArea, PROPERTY_STATUSES, PROPERTY_TYPES as LISTING_TYPES } from "../constants/propertyOptions";
 
-const PROPERTY_TYPES = ["all", "House", "Apartment", "Office", "Villa"];
+const PROPERTY_TYPES = ["all", ...LISTING_TYPES];
 const SORT_OPTIONS = [
   { value: "newest", label: "Newest First" },
   { value: "price-low", label: "Price: Low → High" },
   { value: "price-high", label: "Price: High → Low" },
 ];
+const marketStatus = (property) => PROPERTY_STATUSES.includes(property.status) ? property.status : PROPERTY_STATUSES[0];
+const propertyPurpose = (property) => property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale');
 
 const parseAmenities = (amenities) => {
   if (!amenities || !Array.isArray(amenities)) return [];
@@ -50,17 +53,20 @@ const PropertyGridCard = ({ property, onRemove }) => (
         </div>
       )}
       {/* Badges */}
-      <div className="absolute top-3 left-3 flex gap-1.5">
+      <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
         <span className="px-2.5 py-1 bg-[#1C1B1A]/80 backdrop-blur-sm text-[#FAF8F4] text-xs font-semibold rounded-full">
           {property.type}
         </span>
         <span className={cn(
           "px-2.5 py-1 text-xs font-semibold rounded-full backdrop-blur-sm",
-          property.availability === "rent"
+          property.purpose === "Rent"
             ? "bg-blue-600/80 text-white"
             : "bg-[#D4755B]/80 text-white"
         )}>
-          {property.availability === "rent" ? "For Rent" : "For Sale"}
+          {property.purpose === "Rent" ? "For Rent" : "For Sale"}
+        </span>
+        <span className="px-2.5 py-1 bg-white/90 text-[#1C1B1A] text-xs font-semibold rounded-full">
+          {marketStatus(property)}
         </span>
       </div>
     </div>
@@ -70,21 +76,26 @@ const PropertyGridCard = ({ property, onRemove }) => (
       <h3 className="font-bold text-[#1C1B1A] text-base mb-1 line-clamp-1">{property.title}</h3>
       <div className="flex items-center gap-1 text-[#9CA3AF] text-xs mb-3">
         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-        <span className="line-clamp-1">{property.location}</span>
+        <span className="line-clamp-1">{property.locality || property.location}</span>
       </div>
+      <p className="text-[11px] text-[#9CA3AF] mb-3">{property.category}</p>
 
       {/* Specs */}
       <div className="flex items-center gap-3 text-xs text-[#5A5856] mb-4">
-        <span className="flex items-center gap-1"><BedDouble className="w-3.5 h-3.5 text-[#D4755B]" />{property.beds} Beds</span>
-        <span className="flex items-center gap-1"><Bath className="w-3.5 h-3.5 text-[#D4755B]" />{property.baths} Baths</span>
-        <span className="flex items-center gap-1"><Maximize className="w-3.5 h-3.5 text-[#D4755B]" />{property.sqft} sqft</span>
+        {Number.isFinite(Number(property.bedrooms ?? property.beds)) && (property.bedrooms ?? property.beds) !== '' && (
+          <span className="flex items-center gap-1"><BedDouble className="w-3.5 h-3.5 text-[#D4755B]" />{property.bedrooms ?? property.beds} Beds</span>
+        )}
+        {Number.isFinite(Number(property.baths)) && property.baths !== '' && (
+          <span className="flex items-center gap-1"><Bath className="w-3.5 h-3.5 text-[#D4755B]" />{property.baths} Baths</span>
+        )}
+        <span className="flex items-center gap-1"><Maximize className="w-3.5 h-3.5 text-[#D4755B]" />{formatArea(property.area, property.areaUnit, property.areaSqFt, property.sqft)}</span>
       </div>
 
       {/* Price + Actions */}
       <div className="flex items-center justify-between pt-3 border-t border-[#F5F1E8]">
         <div>
           <span className="text-lg font-bold text-[#D4755B]">{formatPrice(property.price)}</span>
-          {property.availability === "rent" && <span className="text-xs text-[#9CA3AF] ml-1">/mo</span>}
+          {propertyPurpose(property) === "Rent" && <span className="text-xs text-[#9CA3AF] ml-1">/mo</span>}
         </div>
         <div className="flex items-center gap-1.5">
           <Link to={`/update/${property._id}`}>
@@ -129,18 +140,23 @@ const PropertyListRow = ({ property, onRemove }) => (
       <div className="flex items-center gap-2 mb-0.5">
         <h3 className="font-semibold text-[#1C1B1A] text-sm truncate">{property.title}</h3>
         <span className="px-2 py-0.5 bg-[#1C1B1A] text-[#FAF8F4] text-xs rounded-full flex-shrink-0">{property.type}</span>
+        <span className="px-2 py-0.5 bg-[#F5F1E8] text-[#5A5856] text-xs rounded-full flex-shrink-0">{property.category}</span>
       </div>
       <div className="flex items-center gap-1 text-xs text-[#9CA3AF]">
         <MapPin className="w-3 h-3" />
-        <span className="truncate">{property.location}</span>
+        <span className="truncate">{property.locality || property.location}</span>
       </div>
     </div>
 
     {/* Specs */}
     <div className="hidden md:flex items-center gap-4 text-xs text-[#5A5856]">
-      <span className="flex items-center gap-1"><BedDouble className="w-3.5 h-3.5 text-[#D4755B]" />{property.beds}</span>
-      <span className="flex items-center gap-1"><Bath className="w-3.5 h-3.5 text-[#D4755B]" />{property.baths}</span>
-      <span className="flex items-center gap-1"><Maximize className="w-3.5 h-3.5 text-[#D4755B]" />{property.sqft}</span>
+      {Number.isFinite(Number(property.bedrooms ?? property.beds)) && (property.bedrooms ?? property.beds) !== '' && (
+        <span className="flex items-center gap-1"><BedDouble className="w-3.5 h-3.5 text-[#D4755B]" />{property.bedrooms ?? property.beds}</span>
+      )}
+      {Number.isFinite(Number(property.baths)) && property.baths !== '' && (
+        <span className="flex items-center gap-1"><Bath className="w-3.5 h-3.5 text-[#D4755B]" />{property.baths}</span>
+      )}
+      <span className="flex items-center gap-1"><Maximize className="w-3.5 h-3.5 text-[#D4755B]" />{formatArea(property.area, property.areaUnit, property.areaSqFt, property.sqft)}</span>
     </div>
 
     {/* Price */}
@@ -148,9 +164,9 @@ const PropertyListRow = ({ property, onRemove }) => (
       <div className="font-bold text-[#D4755B] text-sm">{formatPrice(property.price)}</div>
       <div className={cn(
         "text-xs font-medium mt-0.5",
-        property.availability === "rent" ? "text-blue-600" : "text-emerald-600"
+        propertyPurpose(property) === "Rent" ? "text-blue-600" : "text-emerald-600"
       )}>
-        {property.availability === "rent" ? "For Rent" : "For Sale"}
+        {propertyPurpose(property) === "Rent" ? "For Rent" : "For Sale"} · {marketStatus(property)}
       </div>
     </div>
 
@@ -228,7 +244,7 @@ const PropertyListings = () => {
   const filteredProperties = properties
     .filter((p) => {
       const matchesSearch = !searchTerm ||
-        [p.title, p.location, p.type].some((f) => f?.toLowerCase().includes(searchTerm.toLowerCase()));
+        [p.title, p.location, p.locality, p.type, p.category, p.purpose].some((f) => f?.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesType = filterType === "all" || p.type?.toLowerCase() === filterType.toLowerCase();
       return matchesSearch && matchesType;
     })

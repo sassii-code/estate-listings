@@ -12,13 +12,22 @@ export interface Property {
   _id: string;
   title: string;
   location: string;
+  locality?: string;
   price: number;
   image: string[];
-  beds: number;
-  baths: number;
-  sqft: number;
+  bedrooms?: number;
+  beds?: number;
+  baths?: number;
+  area?: number;
+  areaUnit?: string;
+  areaSqFt?: number;
+  sqft?: number;
+  purpose?: string;
+  category?: string;
   type: string;
-  availability: string;
+  status?: string;
+  availability?: string;
+  reraNumber?: string;
   description: string;
   amenities: string[];
   phone: string;
@@ -62,7 +71,7 @@ const PropertiesPage: React.FC = () => {
 
     if (filters.location) {
       result = result.filter(p =>
-        p.location.toLowerCase().includes(filters.location!.toLowerCase())
+        (p.locality || p.location).toLowerCase().includes(filters.location!.toLowerCase())
       );
     }
     if (filters.propertyType?.length) {
@@ -70,15 +79,16 @@ const PropertiesPage: React.FC = () => {
         filters.propertyType!.some(t => t.toLowerCase() === p.type.toLowerCase())
       );
     }
-    if (filters.availability) {
+    if (filters.purpose) {
       result = result.filter(p =>
-        p.availability.toLowerCase() === filters.availability!.toLowerCase()
+        (p.purpose || (p.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale')).toLowerCase() === filters.purpose!.toLowerCase()
       );
     }
     if (filters.priceRange) {
       const [min, max] = filters.priceRange;
-      const minPrice = min * 1_000_000;
-      const maxPrice = max * 1_000_000;
+      const priceScale = filters.purpose?.toLowerCase() === 'rent' ? 1_000 : 1_000_000;
+      const minPrice = min * priceScale;
+      const maxPrice = max * priceScale;
       result = result.filter(p => {
         if (p.price < minPrice) return false;
         if (max >= 200) return true;
@@ -86,7 +96,7 @@ const PropertiesPage: React.FC = () => {
       });
     }
     if (filters.bedrooms && filters.bedrooms > 0) {
-      result = result.filter(p => p.beds >= filters.bedrooms!);
+      result = result.filter(p => (p.bedrooms ?? p.beds ?? 0) >= filters.bedrooms!);
     }
     if (filters.bathrooms && filters.bathrooms > 0) {
       result = result.filter(p => p.baths >= filters.bathrooms!);
@@ -102,7 +112,7 @@ const PropertiesPage: React.FC = () => {
     switch (sortBy) {
       case 'price-low': result.sort((a, b) => a.price - b.price); break;
       case 'price-high': result.sort((a, b) => b.price - a.price); break;
-      case 'beds': result.sort((a, b) => b.beds - a.beds); break;
+      case 'beds': result.sort((a, b) => (b.bedrooms ?? b.beds ?? 0) - (a.bedrooms ?? a.beds ?? 0)); break;
       case 'newest': result.sort((a, b) => b._id.localeCompare(a._id)); break;
     }
 

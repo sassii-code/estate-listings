@@ -8,9 +8,9 @@ interface PropertyCardProps {
   name: string;
   price: string;
   location: string;
-  beds: number;
-  baths: number;
-  sqft: number;
+  beds?: number;
+  baths?: number;
+  area: string;
   badge?: string;
   tags?: string[];
 }
@@ -18,11 +18,14 @@ interface PropertyCardProps {
 const badgeColor: Record<string, string> = {
   'FOR RENT': 'bg-blue-500',
   'SOLD': 'bg-[#6B7280]',
+  'RENTED': 'bg-[#6B7280]',
+  'UNDER OFFER': 'bg-amber-500',
+  'AVAILABLE': 'bg-emerald-600',
   'HOT': 'bg-[#D4755B]',
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
-  id, image, name, price, location, beds, baths, sqft, badge, tags = []
+  id, image, name, price, location, beds, baths, area, badge, tags = []
 }) => {
   const [favorited, setFavorited] = useState(false);
 
@@ -85,19 +88,28 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
           {/* Specs — dot-separated, no icons */}
           <div className="flex items-center gap-1.5 font-manrope text-xs text-[#6B7280] tabular-nums">
-            <span>{beds} {beds === 1 ? 'Bed' : 'Beds'}</span>
-            <span className="text-[#D4C4BC]">·</span>
-            <span>{baths} {baths === 1 ? 'Bath' : 'Baths'}</span>
-            <span className="text-[#D4C4BC]">·</span>
-            <span>{sqft.toLocaleString()} sqft</span>
+            {[
+              beds != null && `${beds} ${beds === 1 ? 'Bed' : 'Beds'}`,
+              baths != null && `${baths} ${baths === 1 ? 'Bath' : 'Baths'}`,
+              area,
+            ].filter(Boolean).map((spec, index) => (
+              <React.Fragment key={spec}>
+                {index > 0 && <span className="text-[#D4C4BC">·</span>}
+                <span>{spec}</span>
+              </React.Fragment>
+            ))}
           </div>
 
           {/* Type tag — only first tag, subtle */}
-          {tags[0] && (
+          {tags.length > 0 && (
             <div className="mt-3">
-              <span className="inline-block font-manrope text-[10px] uppercase tracking-wider text-[#9CA3AF] border border-[#E6E0DA] rounded px-2 py-0.5">
-                {tags[0]}
-              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {tags.map((tag) => (
+                  <span key={tag} className="font-manrope text-[10px] uppercase tracking-wider text-[#9CA3AF] border border-[#E6E0DA] rounded px-2 py-0.5">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>

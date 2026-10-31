@@ -35,7 +35,7 @@ export const getAdminStats = async (req, res) => {
       revenue
     ] = await Promise.all([
       Property.countDocuments(),
-      Property.countDocuments({ status: 'active' }),
+      Property.countDocuments({ reviewStatus: 'active' }),
       User.countDocuments(),
       Appointment.countDocuments({ status: 'pending' }),
       getRecentActivity(),

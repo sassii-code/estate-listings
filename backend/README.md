@@ -102,6 +102,14 @@ GITHUB_MODELS_API_KEY=your_github_pat_token
 
 </details>
 
+After deploying the property schema update, run the one-time migration before relying on the admin inventory or review queue:
+
+```bash
+npm run migrate:property-schema
+```
+
+Back up MongoDB before running it. The migration preserves moderation state in `reviewStatus` and fills the new market fields from legacy property records.
+
 <details>
 <summary><strong>3. Boot Initialized Server</strong></summary>
 

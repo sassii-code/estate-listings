@@ -1,4 +1,11 @@
 import mongoose from "mongoose";
+import {
+  PROPERTY_AREA_UNITS,
+  PROPERTY_CATEGORIES,
+  PROPERTY_PURPOSES,
+  PROPERTY_STATUSES,
+  PROPERTY_TYPES,
+} from "../constants/propertyOptions.js";
 
 const propertySchema = new mongoose.Schema(
   {
@@ -13,6 +20,50 @@ const propertySchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
+    },
+    purpose: {
+      type: String,
+      enum: PROPERTY_PURPOSES,
+      required: true,
+    },
+    category: {
+      type: String,
+      enum: PROPERTY_CATEGORIES,
+      required: true,
+    },
+    locality: {
+      type: String,
+      default: "",
+    },
+    area: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    areaUnit: {
+      type: String,
+      enum: PROPERTY_AREA_UNITS,
+      required: true,
+    },
+    areaSqFt: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    bedrooms: {
+      type: Number,
+      min: 0,
+    },
+    reraNumber: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: PROPERTY_STATUSES,
+      default: "Available",
     },
     // Stored as plain URLs. Admin-panel listings use this directly.
     // User-submitted listings also store URLs here for full compatibility.
@@ -22,23 +73,21 @@ const propertySchema = new mongoose.Schema(
     },
     beds: {
       type: Number,
-      required: true,
     },
     baths: {
       type: Number,
-      required: true,
     },
     sqft: {
       type: Number,
-      required: true,
     },
     type: {
       type: String,
+      enum: PROPERTY_TYPES,
       required: true,
     },
     availability: {
       type: String,
-      required: true,
+      default: "sale",
     },
     description: {
       type: String,
@@ -66,10 +115,9 @@ const propertySchema = new mongoose.Schema(
     // 'rejected' — not approved; rejectionReason is set
     // 'expired'  — was active but passed expiresAt date
     // Admin-panel listings are saved directly as 'active' (no review needed).
-    status: {
+    reviewStatus: {
       type: String,
       enum: ["pending", "active", "rejected", "expired"],
-      default: "active", // admin-added properties go live immediately
     },
 
     // Reference to the User who submitted this listing (null for admin entries)
@@ -98,14 +146,15 @@ const propertySchema = new mongoose.Schema(
 );
 
 // Database indexes for common query patterns
-propertySchema.index({ status: 1 }); // Status filtering (active, pending, etc.)
+propertySchema.index({ status: 1 });
+propertySchema.index({ reviewStatus: 1 });
 propertySchema.index({ createdAt: -1 }); // Sorting by creation date
 propertySchema.index({ postedBy: 1 }); // User's own listings
-propertySchema.index({ status: 1, createdAt: -1 }); // Compound: status + sort
+propertySchema.index({ reviewStatus: 1, createdAt: -1 }); // Review queue and public listing sort
 propertySchema.index({ postedBy: 1, createdAt: -1 }); // Compound: user listings + sort
 propertySchema.index({ expiresAt: 1 }); // Expiry cleanup queries
 propertySchema.index({ location: "text", title: "text", description: "text" }); // Text search
-propertySchema.index({ price: 1, beds: 1, type: 1, location: 1 }); // Property filters
+propertySchema.index({ price: 1, bedrooms: 1, purpose: 1, category: 1, type: 1, locality: 1 });
 
 const Property = mongoose.model("Property", propertySchema);
 

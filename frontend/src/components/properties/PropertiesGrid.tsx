@@ -5,6 +5,7 @@ import type { Property } from '../../pages/PropertiesPage';
 import { formatPrice } from '../../utils/formatPrice';
 import { Link } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize2 } from 'lucide-react';
+import { formatArea } from '../../utils/formatArea';
 
 const fallbackImages = [
   "https://images.unsplash.com/photo-1622015663381-d2e05ae91b72?w=800",
@@ -32,10 +33,10 @@ const item: Variants = {
 // List view row — more compact than the card
 const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property, index }) => {
   const img = property.image?.[0] || fallbackImages[index % fallbackImages.length];
-  const badge = property.availability === 'sold' ? 'SOLD'
-    : property.availability === 'rent' ? 'FOR RENT'
-    : property.availability === 'sale' ? 'FOR SALE'
-    : property.availability?.toUpperCase();
+  const badge = marketStatus(property).toUpperCase();
+  const purpose = property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale');
+  const bedroomCount = property.bedrooms ?? property.beds;
+  const area = formatArea(property);
 
   return (
     <Link to={`/property/${property._id}`} className="group block outline-none focus-visible:ring-2 focus-visible:ring-[#D4755B] rounded-2xl">
@@ -64,23 +65,19 @@ const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property
             <h3 className="font-fraunces text-lg font-semibold text-[#221410] mb-1 leading-snug">{property.title}</h3>
             <div className="flex items-center gap-1 mb-3">
               <MapPin className="w-3.5 h-3.5 text-[#D4755B] shrink-0" />
-              <span className="font-manrope text-sm text-[#6B7280]">{property.location}</span>
+              <span className="font-manrope text-sm text-[#6B7280]">{property.locality || property.location}</span>
             </div>
             <div className="flex items-center gap-4 font-manrope text-sm text-[#6B7280]">
-              <span className="flex items-center gap-1.5"><Bed className="w-4 h-4" />{property.beds} Beds</span>
-              <span className="flex items-center gap-1.5"><Bath className="w-4 h-4" />{property.baths} Baths</span>
-              <span className="flex items-center gap-1.5"><Maximize2 className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>
+              {bedroomCount != null && <span className="flex items-center gap-1.5"><Bed className="w-4 h-4" />{bedroomCount} Beds</span>}
+              {property.baths != null && <span className="flex items-center gap-1.5"><Bath className="w-4 h-4" />{property.baths} Baths</span>}
+              <span className="flex items-center gap-1.5"><Maximize2 className="w-4 h-4" />{area}</span>
             </div>
           </div>
           <div className="flex items-center justify-between mt-4">
             <p className="font-fraunces text-2xl font-bold text-[#D4755B] tabular-nums">
-              {formatPrice(property.price)}
+              {formatPrice(property.price)}{purpose === 'Rent' ? ' /mo' : ''}
             </p>
-            {property.type && (
-              <span className="font-manrope text-xs uppercase tracking-wider text-[#9CA3AF] border border-[#E6E0DA] rounded px-2 py-0.5">
-                {property.type}
-              </span>
-            )}
+            <span className="font-manrope text-xs uppercase tracking-wider text-[#9CA3AF] border border-[#E6E0DA] rounded px-2 py-0.5">{property.type}</span>
           </div>
         </div>
       </div>
@@ -104,18 +101,13 @@ const PropertiesGrid: React.FC<PropertiesGridProps> = ({ properties, viewMode = 
                 id={property._id}
                 image={property.image?.[0] || fallbackImages[index % fallbackImages.length]}
                 name={property.title}
-                price={formatPrice(property.price)}
-                location={property.location}
-                beds={property.beds}
+                price={`${formatPrice(property.price)}${(property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale')) === 'Rent' ? ' /mo' : ''}`}
+                location={property.locality || property.location}
+                beds={property.bedrooms ?? property.beds}
                 baths={property.baths}
-                sqft={property.sqft}
-                badge={
-                  property.availability === 'sold' ? 'SOLD' :
-                  property.availability === 'rent' ? 'FOR RENT' :
-                  property.availability === 'sale' ? 'FOR SALE' :
-                  property.availability?.toUpperCase()
-                }
-                tags={property.type ? [property.type] : []}
+                area={formatArea(property)}
+                badge={marketStatus(property).toUpperCase()}
+                tags={[property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale'), property.category, property.type].filter(Boolean)}
               />
             </motion.div>
           ))}
@@ -139,3 +131,9 @@ const PropertiesGrid: React.FC<PropertiesGridProps> = ({ properties, viewMode = 
 };
 
 export default PropertiesGrid;
+
+function marketStatus(property: Property): string {
+  if (['Available', 'Under offer', 'Sold', 'Rented'].includes(property.status || '')) return property.status!;
+  if (property.availability?.toLowerCase() === 'sold') return 'Sold';
+  return 'Available';
+}

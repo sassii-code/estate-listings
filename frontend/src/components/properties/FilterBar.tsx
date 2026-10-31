@@ -14,21 +14,22 @@ interface FilterBarProps {
 export interface FilterState {
   location?: string;
   propertyType?: string[];
-  availability?: string;
+  purpose?: string;
   priceRange?: [number, number];
   bedrooms?: number;
   bathrooms?: number;
   amenities?: string[];
 }
 
-const PROPERTY_TYPES = ['Apartment', 'House', 'Villa', 'Office'];
+const PROPERTY_TYPES = ['Plot', 'Flat', 'House', 'Shop', 'Office', 'Showroom', 'Warehouse', 'Factory', 'Industrial land'];
 const AMENITIES = [
   'Parking', 'Swimming Pool', 'Gym', 'Garden', 'Security',
   'Clubhouse', 'Power Backup', 'Lift', 'Balcony', 'CCTV Surveillance',
   'Children Play Area', 'Gated Community',
 ];
 
-const formatPriceLabel = (value: number): string => {
+const formatPriceLabel = (value: number, purpose: string): string => {
+  if (purpose === 'Rent') return `${(value * 1_000).toLocaleString('en-IN')}/mo`;
   if (value >= 200) return '20+ Cr';
   if (value >= 10) return `${(value / 10).toFixed(value % 10 === 0 ? 0 : 1)} Cr`;
   return `${value * 10} L`;
@@ -91,7 +92,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   onViewChange,
 }) => {
   const [location, setLocation] = useState('');
-  const [availability, setAvailability] = useState('');
+  const [purpose, setPurpose] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [bedrooms, setBedrooms] = useState(0);
@@ -104,13 +105,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
     if (isFirstRender.current) { isFirstRender.current = false; return; }
     const f: FilterState = {};
     if (location) f.location = location;
-    if (availability) f.availability = availability;
+    if (purpose) f.purpose = purpose;
     if (priceRange[0] > 0 || priceRange[1] < 200) f.priceRange = priceRange;
     if (selectedTypes.length) f.propertyType = selectedTypes;
     if (bedrooms > 0) f.bedrooms = bedrooms;
     if (selectedAmenities.length) f.amenities = selectedAmenities;
     onFilterChange?.(f);
-  }, [location, availability, priceRange, selectedTypes, bedrooms, selectedAmenities]);
+  }, [location, purpose, priceRange, selectedTypes, bedrooms, selectedAmenities]);
 
   // Close "More filters" on outside click
   useEffect(() => {
@@ -122,13 +123,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
   }, []);
 
   const handleReset = () => {
-    setLocation(''); setAvailability(''); setPriceRange([0, 200]);
+    setLocation(''); setPurpose(''); setPriceRange([0, 200]);
     setSelectedTypes([]); setBedrooms(0); setSelectedAmenities([]);
     onFilterChange?.({});
   };
 
   const activeCount = [
-    location, availability,
+    location, purpose,
     priceRange[0] > 0 || priceRange[1] < 200,
     selectedTypes.length > 0,
     bedrooms > 0,
@@ -164,19 +165,19 @@ const FilterBar: React.FC<FilterBarProps> = ({
             )}
           </div>
 
-          {/* Buy / Rent toggle */}
+          {/* Purpose toggle */}
           <div className="flex items-center gap-1 h-10 bg-[#F5F1E8] rounded-xl p-1">
-            {['buy', 'rent'].map(a => (
+            {['Sale', 'Rent'].map(a => (
               <button
                 key={a}
-                onClick={() => setAvailability(av => av === a ? '' : a)}
+                onClick={() => setPurpose(current => current === a ? '' : a)}
                 className={`h-8 px-4 rounded-lg font-manrope text-sm font-medium transition-all duration-200 active:scale-[0.96] ${
-                  availability === a
+                  purpose === a
                     ? 'bg-white text-[#221410] shadow-sm'
                     : 'text-[#6B7280] hover:text-[#221410]'
                 }`}
               >
-                {a.charAt(0).toUpperCase() + a.slice(1)}
+                {a}
               </button>
             ))}
           </div>
@@ -184,15 +185,15 @@ const FilterBar: React.FC<FilterBarProps> = ({
           {/* Price */}
           <Dropdown
             label={priceRange[0] > 0 || priceRange[1] < 200
-              ? `₹${formatPriceLabel(priceRange[0])} – ₹${formatPriceLabel(priceRange[1])}`
+              ? `₹${formatPriceLabel(priceRange[0], purpose)} – ₹${formatPriceLabel(priceRange[1], purpose)}`
               : 'Price'}
             active={priceRange[0] > 0 || priceRange[1] < 200}
           >
             <div className="p-4 space-y-4 w-[260px]">
               <p className="font-manrope font-semibold text-xs text-[#221410] uppercase tracking-wider">Price Range</p>
               <div className="flex justify-between font-space-mono text-sm text-[#D4755B] tabular-nums">
-                <span>₹{formatPriceLabel(priceRange[0])}</span>
-                <span>₹{formatPriceLabel(priceRange[1])}</span>
+                <span>₹{formatPriceLabel(priceRange[0], purpose)}</span>
+                <span>₹{formatPriceLabel(priceRange[1], purpose)}</span>
               </div>
               <div className="space-y-3">
                 <div>

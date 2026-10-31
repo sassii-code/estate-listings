@@ -19,17 +19,26 @@ interface PropertyData {
   _id: string;
   title: string;
   location: string;
+  locality?: string;
   price: number;
   image: string[];
-  beds: number;
-  baths: number;
-  sqft: number;
+  bedrooms?: number;
+  beds?: number;
+  baths?: number;
+  area?: number;
+  areaUnit?: string;
+  areaSqFt?: number;
+  sqft?: number;
+  purpose?: string;
+  category?: string;
   type: string;
-  availability: string;
+  status?: string;
+  availability?: string;
   description: string;
   amenities: string[];
   phone: string;
   googleMapLink?: string;
+  reraNumber?: string;
 }
 
 const PropertyDetailsPage: React.FC = () => {
@@ -42,7 +51,7 @@ const PropertyDetailsPage: React.FC = () => {
   useSEO({
     title: property ? `${property.title} - ${property.location}` : 'Property Details',
     description: property
-      ? `${property.title} in ${property.location}. ${property.beds} beds, ${property.baths} baths, ${property.sqft} sqft. ${property.type}.`
+      ? `${property.title} in ${property.locality || property.location}. ${property.type} property.`
       : 'View property details on BuildEstate.',
     image: property?.image?.[0] || undefined,
     url: property ? `https://buildestate.vercel.app/property/${property._id}` : undefined,
@@ -72,14 +81,11 @@ const PropertyDetailsPage: React.FC = () => {
     fetchProperty();
   }, [id]);
 
-  // Map availability to status
-  const getStatus = (availability: string): 'available' | 'sold' | 'pending' => {
-    switch (availability?.toLowerCase()) {
-      case 'sold': return 'sold';
-      case 'pending': return 'pending';
-      default: return 'available';
-    }
-  };
+  const marketStatus = ['Available', 'Under offer', 'Sold', 'Rented'].includes(property?.status || '')
+    ? property!.status!
+    : property?.availability?.toLowerCase() === 'sold' ? 'Sold' : 'Available';
+  const purpose = property?.purpose || (property?.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale');
+  const areaLabel = property ? formatArea(property) : '';
 
   if (loading) {
     return (
@@ -145,8 +151,8 @@ const PropertyDetailsPage: React.FC = () => {
           location: city,
           region: cityParts[cityParts.length - 1] || '',
           price: property.price,
-          sqft: property.sqft,
-          beds: property.beds,
+          sqft: property.areaSqFt ?? property.sqft,
+          beds: property.bedrooms ?? property.beds,
           baths: property.baths,
           image: property.image?.[0],
         }}
@@ -177,14 +183,15 @@ const PropertyDetailsPage: React.FC = () => {
 
       {/* Property Header with Price & Specs */}
       <PropertyHeader
-        status={getStatus(property.availability)}
+        status={marketStatus}
         refNumber={`#${property._id.slice(-8).toUpperCase()}`}
         name={property.title}
-        location={property.location}
-        price={formatPrice(property.price)}
-        beds={property.beds}
+        location={property.locality ? `${property.locality}, Haridwar, Uttarakhand` : property.location}
+        price={`${formatPrice(property.price)}${purpose === 'Rent' ? ' /mo' : ''}`}
+        beds={property.bedrooms ?? property.beds}
         baths={property.baths}
-        sqft={property.sqft}
+        area={areaLabel}
+        reraNumber={property.reraNumber}
       />
 
       {/* Main Content Area */}
@@ -215,7 +222,7 @@ const PropertyDetailsPage: React.FC = () => {
             <div className="lg:col-span-1">
               <ScheduleViewingCard
                 property={{ name: property.title, id: property._id }}
-                price={formatPrice(property.price)}
+                price={`${formatPrice(property.price)}${purpose === 'Rent' ? ' /month' : ''}`}
               />
             </div>
           </div>

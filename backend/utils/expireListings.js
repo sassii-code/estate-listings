@@ -13,10 +13,10 @@ export function startExpireListingsJob() {
         try {
             const result = await Property.updateMany(
                 {
-                    status: 'active',
+                    reviewStatus: 'active',
                     expiresAt: { $lt: new Date(), $ne: null },
                 },
-                { $set: { status: 'expired' } }
+                { $set: { reviewStatus: 'expired' } }
             );
 
             if (result.modifiedCount > 0) {

@@ -6,9 +6,15 @@ import apiClient from '../services/apiClient';
 import { X, Upload, Home, MapPin, Phone, DollarSign, BedDouble, Bath, Maximize, Link as LinkIcon, CheckSquare, Square, Plus, ArrowLeft, Loader2 } from 'lucide-react';
 import { AMENITIES_LIST } from '../constants/amenities';
 import { cn } from '../lib/utils';
-
-const PROPERTY_TYPES = ['House', 'Apartment', 'Office', 'Villa'];
-const AVAILABILITY_TYPES = ['rent', 'buy'];
+import {
+  PROPERTY_AREA_UNITS,
+  PROPERTY_CATEGORIES,
+  PROPERTY_LOCALITIES,
+  PROPERTY_PURPOSES,
+  PROPERTY_STATUSES,
+  PROPERTY_TYPES,
+  toSquareFeet,
+} from '../constants/propertyOptions';
 
 const inputClass = "w-full px-4 py-3 bg-white border border-[#E6D5C3] rounded-xl text-[#1C1B1A] placeholder-[#9CA3AF] text-sm transition-all duration-200 outline-none focus:border-[#D4755B] focus:ring-2 focus:ring-[#D4755B]/15";
 const labelClass = "block text-sm font-semibold text-[#1C1B1A] mb-2";
@@ -29,8 +35,9 @@ const Update = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    title: '', type: '', price: '', location: '', description: '',
-    beds: '', baths: '', sqft: '', phone: '', availability: '',
+    title: '', purpose: 'Sale', category: 'Residential', type: 'Flat', status: 'Available',
+    locality: '', price: '', area: '', areaUnit: 'sq ft', areaSqFt: '',
+    bedrooms: '', reraNumber: '', description: '', baths: '', phone: '',
     amenities: [], googleMapLink: '', images: [],
   });
   const [previewUrls, setPreviewUrls] = useState([]);
@@ -48,11 +55,30 @@ const Update = () => {
           if (amenities.length === 1 && typeof amenities[0] === 'string' && amenities[0].startsWith('[')) {
             try { amenities = JSON.parse(amenities[0]); } catch { /* keep as-is */ }
           }
+          const legacyType = property.type === 'Apartment' ? 'Flat' : property.type === 'Villa' ? 'House' : property.type;
+          const type = PROPERTY_TYPES.includes(legacyType) ? legacyType : 'Flat';
+          const purpose = PROPERTY_PURPOSES.includes(property.purpose)
+            ? property.purpose
+            : String(property.availability || '').toLowerCase().includes('rent') ? 'Rent' : 'Sale';
+          const inferredCategory = ['Shop', 'Office', 'Showroom'].includes(type)
+            ? 'Commercial'
+            : ['Warehouse', 'Factory', 'Industrial land'].includes(type) ? 'Industrial' : 'Residential';
           setFormData({
-            title: property.title, type: property.type, price: property.price,
-            location: property.location, description: property.description,
-            beds: property.beds, baths: property.baths, sqft: property.sqft,
-            phone: property.phone, availability: property.availability,
+            title: property.title,
+            purpose,
+            category: PROPERTY_CATEGORIES.includes(property.category) ? property.category : inferredCategory,
+            type,
+            status: PROPERTY_STATUSES.includes(property.status) ? property.status : 'Available',
+            locality: property.locality || '',
+            price: property.price,
+            area: property.area ?? property.areaSqFt ?? property.sqft ?? '',
+            areaUnit: PROPERTY_AREA_UNITS.includes(property.areaUnit) ? property.areaUnit : 'sq ft',
+            areaSqFt: property.areaSqFt ?? property.sqft ?? '',
+            bedrooms: property.bedrooms ?? property.beds ?? '',
+            reraNumber: property.reraNumber || '',
+            description: property.description,
+            baths: property.baths ?? '',
+            phone: property.phone,
             amenities, googleMapLink: property.googleMapLink || '', images: property.image,
           });
           setPreviewUrls(property.image);
@@ -71,7 +97,14 @@ const Update = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === 'area' || name === 'areaUnit') {
+        const areaSqFt = toSquareFeet(next.area, next.areaUnit);
+        next.areaSqFt = areaSqFt ? String(areaSqFt) : '';
+      }
+      return next;
+    });
   };
 
   const handleAmenityToggle = (amenity) => {
@@ -107,7 +140,7 @@ const Update = () => {
     try {
       const formdata = new FormData();
       formdata.append('id', id);
-      ['title', 'type', 'price', 'location', 'description', 'beds', 'baths', 'sqft', 'phone', 'availability', 'googleMapLink'].forEach((key) => {
+      ['title', 'purpose', 'category', 'type', 'status', 'locality', 'price', 'description', 'bedrooms', 'baths', 'area', 'areaUnit', 'areaSqFt', 'reraNumber', 'phone', 'googleMapLink'].forEach((key) => {
         formdata.append(key, formData[key]);
       });
       formData.amenities.forEach((amenity, i) => formdata.append(`amenities[${i}]`, amenity));
@@ -172,22 +205,34 @@ const Update = () => {
                 <textarea id="description" name="description" required value={formData.description}
                   onChange={handleInputChange} rows={4} className={cn(inputClass, 'resize-none')} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="purpose" className={labelClass}>Purpose</label>
+                  <select id="purpose" name="purpose" required value={formData.purpose}
+                    onChange={handleInputChange} className={inputClass}>
+                    {PROPERTY_PURPOSES.map((purpose) => <option key={purpose} value={purpose}>{purpose}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="category" className={labelClass}>Category</label>
+                  <select id="category" name="category" required value={formData.category}
+                    onChange={handleInputChange} className={inputClass}>
+                    {PROPERTY_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
+                  </select>
+                </div>
                 <div>
                   <label htmlFor="type" className={labelClass}>Property Type</label>
                   <select id="type" name="type" required value={formData.type}
                     onChange={handleInputChange} className={inputClass}>
-                    <option value="">Select Type</option>
                     {PROPERTY_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="availability" className={labelClass}>Availability</label>
-                  <select id="availability" name="availability" required value={formData.availability}
+                  <label htmlFor="status" className={labelClass}>Status</label>
+                  <select id="status" name="status" required value={formData.status}
                     onChange={handleInputChange} className={inputClass}>
-                    <option value="">Select Availability</option>
-                    {AVAILABILITY_TYPES.map((type) => (
-                      <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+                    {PROPERTY_STATUSES.map((status) => (
+                      <option key={status} value={status}>{status}</option>
                     ))}
                   </select>
                 </div>
@@ -200,19 +245,24 @@ const Update = () => {
             <SectionHeader icon={MapPin} title="Location & Pricing" />
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="price" className={labelClass}>Price (₹)</label>
+                <label htmlFor="price" className={labelClass}>
+                  {formData.purpose === 'Rent' ? 'Monthly Rent (₹)' : 'Price (₹)'}
+                </label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
-                  <input type="number" id="price" name="price" required min="0"
+                  <input type="number" id="price" name="price" required min="1"
                     value={formData.price} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
                 </div>
               </div>
               <div>
-                <label htmlFor="location" className={labelClass}>Location</label>
+                <label htmlFor="locality" className={labelClass}>Locality</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
-                  <input type="text" id="location" name="location" required
-                    value={formData.location} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
+                  <select id="locality" name="locality" required value={formData.locality}
+                    onChange={handleInputChange} className={cn(inputClass, 'pl-10')}>
+                    <option value="">Select locality</option>
+                    {PROPERTY_LOCALITIES.map((locality) => <option key={locality} value={locality}>{locality}</option>)}
+                  </select>
                 </div>
               </div>
               <div>
@@ -233,27 +283,51 @@ const Update = () => {
                     value={formData.googleMapLink} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
                 </div>
               </div>
+              <div>
+                <label htmlFor="reraNumber" className={labelClass}>RERA Number <span className="text-[#9CA3AF] font-normal">(optional)</span></label>
+                <input type="text" id="reraNumber" name="reraNumber" value={formData.reraNumber}
+                  onChange={handleInputChange} placeholder="Enter RERA registration number" className={inputClass} />
+              </div>
             </div>
           </div>
 
           {/* Property Details */}
           <div className="bg-white rounded-2xl p-6 border border-[#E6D5C3] shadow-card">
             <SectionHeader icon={Maximize} title="Property Details" />
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { id: 'beds', label: 'Bedrooms', icon: BedDouble },
-                { id: 'baths', label: 'Bathrooms', icon: Bath },
-                { id: 'sqft', label: 'Square Feet', icon: Maximize },
-              ].map(({ id: fieldId, label, icon: Icon }) => (
-                <div key={fieldId}>
-                  <label htmlFor={fieldId} className={labelClass}>{label}</label>
-                  <div className="relative">
-                    <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
-                    <input type="number" id={fieldId} name={fieldId} required min="0"
-                      value={formData[fieldId]} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="bedrooms" className={labelClass}>Bedrooms <span className="text-[#9CA3AF] font-normal">(optional)</span></label>
+                <div className="relative">
+                  <BedDouble className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
+                  <input type="number" id="bedrooms" name="bedrooms" min="0"
+                    value={formData.bedrooms} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
                 </div>
-              ))}
+              </div>
+              <div>
+                <label htmlFor="baths" className={labelClass}>Bathrooms <span className="text-[#9CA3AF] font-normal">(optional)</span></label>
+                <div className="relative">
+                  <Bath className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
+                  <input type="number" id="baths" name="baths" min="0"
+                    value={formData.baths} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="area" className={labelClass}>Area</label>
+                <div className="flex gap-2">
+                  <div className="relative min-w-0 flex-1">
+                    <Maximize className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
+                    <input type="number" id="area" name="area" required min="0.01" step="any"
+                      value={formData.area} onChange={handleInputChange} className={cn(inputClass, 'pl-10')} />
+                  </div>
+                  <select id="areaUnit" name="areaUnit" required value={formData.areaUnit}
+                    onChange={handleInputChange} className={`${inputClass} w-36 shrink-0`}>
+                    {PROPERTY_AREA_UNITS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}
+                  </select>
+                </div>
+                <p className="text-xs text-[#6B7280] mt-1">
+                  Equivalent: {formData.areaSqFt || '0'} sq ft. Bigha uses the Uttarakhand standard of 27,000 sq ft.
+                </p>
+              </div>
             </div>
           </div>
 

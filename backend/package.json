@@ -10,6 +10,7 @@
     "dev": "nodemon server.js",
     "build": "echo 'Build completed'",
     "render-build": "npm install",
+    "migrate:property-schema": "node scripts/migratePropertySchema.js",
     "test": "echo 'No tests specified' && exit 0"
   },
   "author": "Aayush Vaghela",

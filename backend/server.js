@@ -103,6 +103,7 @@ const parseCsv = (value = '') =>
     .filter(Boolean);
 
 const envOrigins = [
+  ...parseCsv(process.env.CORS_ORIGINS || ''),
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL,
   process.env.WEBSITE_URL,

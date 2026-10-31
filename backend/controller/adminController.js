@@ -9,6 +9,7 @@ import { logAdminActivity } from "../utils/activityLogger.js";
 import createCsvWriter from 'csv-writer';
 import fs from 'fs';
 import mongoose from 'mongoose';
+import { PROPERTY_STATUSES } from '../constants/propertyOptions.js';
 
 const formatRecentProperties = (properties) => {
   return properties.map((property) => ({
@@ -41,7 +42,7 @@ export const getAdminStats = async (req, res) => {
       viewsData,
     ] = await Promise.all([
       Property.countDocuments().catch(() => 0),
-      Property.countDocuments({ status: "active" }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: "active" }).catch(() => 0),
       User.countDocuments().catch(() => 0),
       Appointment.countDocuments({ status: "pending" }).catch(() => 0),
       getRecentActivity().catch(() => []),
@@ -236,7 +237,12 @@ export const getPendingListings = async (req, res) => {
     const limit = parseInt(req.query.limit) || 15; // Default 15 per page for admin review
     const skip = (page - 1) * limit;
 
-    const query = { status: "pending" };
+    const query = {
+      $or: [
+        { reviewStatus: "pending" },
+        { reviewStatus: { $exists: false }, status: "pending" },
+      ],
+    };
 
     // Get total count for pagination metadata
     const totalProperties = await Property.countDocuments(query);
@@ -276,7 +282,8 @@ export const approveListing = async (req, res) => {
       return res.status(404).json({ success: false, message: "Listing not found" });
     }
 
-    property.status = "active";
+    if (!PROPERTY_STATUSES.includes(property.status)) property.status = "Available";
+    property.reviewStatus = "active";
     property.rejectionReason = "";
     await property.save();
 
@@ -315,7 +322,8 @@ export const rejectListing = async (req, res) => {
       return res.status(404).json({ success: false, message: "Listing not found" });
     }
 
-    property.status = "rejected";
+    if (!PROPERTY_STATUSES.includes(property.status)) property.status = "Available";
+    property.reviewStatus = "rejected";
     property.rejectionReason = reason.trim();
     await property.save();
 
@@ -500,8 +508,8 @@ export const suspendUser = async (req, res) => {
 
     // Expire all active properties
     await Property.updateMany(
-      { postedBy: userId, status: 'active' },
-      { $set: { status: 'expired' } }
+      { postedBy: userId, reviewStatus: 'active' },
+      { $set: { reviewStatus: 'expired' } }
     );
 
     // Log activity
@@ -569,8 +577,8 @@ export const banUser = async (req, res) => {
 
     // Expire all active properties
     await Property.updateMany(
-      { postedBy: userId, status: 'active' },
-      { $set: { status: 'expired' } }
+      { postedBy: userId, reviewStatus: 'active' },
+      { $set: { reviewStatus: 'expired' } }
     );
 
     // Log activity
@@ -774,8 +782,8 @@ export const bulkSuspendUsers = async (req, res) => {
 
     // Expire all properties from these users
     await Property.updateMany(
-      { postedBy: { $in: userIds }, status: 'active' },
-      { $set: { status: 'expired' } }
+      { postedBy: { $in: userIds }, reviewStatus: 'active' },
+      { $set: { reviewStatus: 'expired' } }
     );
 
     // Get affected users for email notifications
@@ -864,8 +872,8 @@ export const bulkBanUsers = async (req, res) => {
 
     // Expire all properties from these users
     await Property.updateMany(
-      { postedBy: { $in: userIds }, status: 'active' },
-      { $set: { status: 'expired' } }
+      { postedBy: { $in: userIds }, reviewStatus: 'active' },
+      { $set: { reviewStatus: 'expired' } }
     );
 
     // Get affected users for email notifications
@@ -936,7 +944,7 @@ export const bulkApproveProperties = async (req, res) => {
     const result = await Property.updateMany(
       { _id: { $in: propertyIds } },
       {
-        $set: { status: 'active', rejectionReason: '' }
+        $set: { reviewStatus: 'active', rejectionReason: '' }
       }
     );
 
@@ -1023,7 +1031,7 @@ export const bulkRejectProperties = async (req, res) => {
       { _id: { $in: propertyIds } },
       {
         $set: {
-          status: 'rejected',
+          reviewStatus: 'rejected',
           rejectionReason: reason.trim()
         }
       }
@@ -1425,10 +1433,10 @@ export const getPropertyStats = async (req, res) => {
       approvalRate
     ] = await Promise.all([
       Property.countDocuments().catch(() => 0),
-      Property.countDocuments({ status: 'active' }).catch(() => 0),
-      Property.countDocuments({ status: 'pending' }).catch(() => 0),
-      Property.countDocuments({ status: 'rejected' }).catch(() => 0),
-      Property.countDocuments({ status: 'expired' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'active' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'pending' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'rejected' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'expired' }).catch(() => 0),
       // Properties by type
       Property.aggregate([
         {
@@ -1452,8 +1460,8 @@ export const getPropertyStats = async (req, res) => {
       ]).catch(() => []),
       // Calculate approval rate
       (async () => {
-        const approved = await Property.countDocuments({ status: 'active', postedBy: { $ne: null } });
-        const rejected = await Property.countDocuments({ status: 'rejected' });
+        const approved = await Property.countDocuments({ reviewStatus: 'active', postedBy: { $ne: null } });
+        const rejected = await Property.countDocuments({ reviewStatus: 'rejected' });
         const total = approved + rejected;
         return total > 0 ? ((approved / total) * 100).toFixed(1) : 0;
       })()
@@ -1515,20 +1523,20 @@ export const getEnhancedOverview = async (req, res) => {
       viewsData
     ] = await Promise.all([
       Property.countDocuments().catch(() => 0),
-      Property.countDocuments({ status: 'active' }).catch(() => 0),
-      Property.countDocuments({ status: 'pending' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'active' }).catch(() => 0),
+      Property.countDocuments({ reviewStatus: 'pending' }).catch(() => 0),
       User.countDocuments().catch(() => 0),
       Appointment.countDocuments({ status: 'pending' }).catch(() => 0),
 
       // Calculate total platform value (sum of all active property prices)
       Property.aggregate([
-        { $match: { status: 'active' } },
+        { $match: { reviewStatus: 'active' } },
         { $group: { _id: null, total: { $sum: "$price" } } }
       ]).then(result => result[0]?.total || 0).catch(() => 0),
 
       // Calculate average property price
       Property.aggregate([
-        { $match: { status: 'active' } },
+        { $match: { reviewStatus: 'active' } },
         { $group: { _id: null, avg: { $avg: "$price" } } }
       ]).then(result => result[0]?.avg || 0).catch(() => 0),
 

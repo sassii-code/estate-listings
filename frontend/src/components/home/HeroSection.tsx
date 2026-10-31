@@ -120,40 +120,15 @@ const HeroSection: React.FC = () => {
               </motion.div>
             </motion.div>
 
-            {/* Right - Featured Property Card */}
+            {/* Property imagery without placeholder listing data */}
             <div className="relative">
               <div className="rounded-2xl overflow-hidden shadow-[0px_25px_50px_-12px_#e5e7eb]">
                 <div className="relative h-[625px]">
                   <img
                     src={propertyImages[3]}
-                    alt="Villa Serenity"
+                    alt="Contemporary home exterior"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  {/* Property Info Overlay */}
-                  <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/90 border border-white/20 rounded-xl p-4 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)]">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h3 className="font-fraunces font-bold text-lg text-[#111827] mb-1">Villa Serenity</h3>
-                        <p className="font-space-mono text-xs text-[#6b7280] uppercase tracking-wide">Beverly Hills, CA</p>
-                      </div>
-                      <div className="bg-[rgba(212,117,91,0.1)] px-2 py-1 rounded">
-                        <span className="font-manrope font-bold text-xs text-[#D4755B]">AI MATCH: 98%</span>
-                      </div>
-                    </div>
-                    <div className="border-t border-[#e5e7eb] pt-3 flex items-center justify-between">
-                      <span className="font-space-mono text-sm text-[#4b5563]">$4,250,000</span>
-                      <div className="flex items-center gap-4 text-[#4b5563]">
-                        <div className="flex items-center gap-1">
-                          <span className="font-material-icons text-xs" aria-hidden="true">bed</span>
-                          <span className="font-manrope text-sm">4</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="font-material-icons text-xs" aria-hidden="true">shower</span>
-                          <span className="font-manrope text-sm">3.5</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import { resolveModelsByProvider } from './aiModelController.js';
 import { validateAndFixPropertyAnalysis, validateAndFixLocationAnalysis } from '../utils/validateAIResponse.js';
 import imagekit from '../config/imagekit.js';
 import Property from '../models/propertyModel.js';
+import { parsePropertyFields } from '../utils/propertyFields.js';
 import SearchCache from '../models/searchCacheModel.js';
 import TrendsCache from '../models/trendsCacheModel.js';
 import { coalesce, getInFlightCount } from '../utils/requestCoalescer.js';
@@ -663,22 +664,7 @@ async function uploadImages(files) {
 /** POST /api/user/properties — create a new listing (pending approval) */
 export const createUserListing = async (req, res) => {
     try {
-        const { title, location, price, beds, baths, sqft, type, availability, description, phone, googleMapLink } = req.body;
-
-        // Parse amenities — frontend sends as JSON string in FormData
-        let amenities = [];
-        try {
-            amenities = req.body.amenities ? JSON.parse(req.body.amenities) : [];
-        } catch {
-            amenities = Array.isArray(req.body.amenities) ? req.body.amenities : [];
-        }
-
-        // Required field validation
-        const missing = ['title', 'location', 'price', 'beds', 'baths', 'sqft', 'type', 'availability', 'description', 'phone']
-            .filter((f) => !req.body[f]);
-        if (missing.length) {
-            return res.status(400).json({ success: false, message: `Missing required fields: ${missing.join(', ')}` });
-        }
+        const fields = parsePropertyFields(req.body);
 
         const files = req.files || [];
         if (files.length === 0) {
@@ -690,20 +676,9 @@ export const createUserListing = async (req, res) => {
         const expiresAt = new Date(Date.now() + EXPIRY_DAYS * 24 * 60 * 60 * 1000);
 
         const property = await Property.create({
-            title,
-            location,
-            price: Number(price),
-            beds: Number(beds),
-            baths: Number(baths),
-            sqft: Number(sqft),
-            type,
-            availability,
-            description,
-            amenities,
+            ...fields,
             image: imageUrls,
-            phone,
-            googleMapLink: googleMapLink || '',
-            status: 'pending',
+            reviewStatus: 'pending',
             postedBy: req.user._id,
             expiresAt,
         });
@@ -711,7 +686,7 @@ export const createUserListing = async (req, res) => {
         res.status(201).json({ success: true, message: 'Listing submitted for review', property });
     } catch (error) {
         logger.error("Error creating user listing", { error: error.message, stack: error.stack });
-        res.status(500).json({ success: false, message: 'Failed to create listing', error: error.message });
+        res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to create listing' });
     }
 };
 
@@ -766,16 +741,7 @@ export const updateUserListing = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Not authorised to edit this listing' });
         }
 
-        const { title, location, price, beds, baths, sqft, type, availability, description, phone, googleMapLink } = req.body;
-
-        let amenities = property.amenities;
-        if (req.body.amenities) {
-            try {
-                amenities = JSON.parse(req.body.amenities);
-            } catch {
-                amenities = Array.isArray(req.body.amenities) ? req.body.amenities : property.amenities;
-            }
-        }
+        const fields = parsePropertyFields(req.body);
 
         // If new images uploaded, replace the existing set
         let imageUrls = property.image;
@@ -785,21 +751,10 @@ export const updateUserListing = async (req, res) => {
         }
 
         const updates = {
-            ...(title && { title }),
-            ...(location && { location }),
-            ...(price && { price: Number(price) }),
-            ...(beds && { beds: Number(beds) }),
-            ...(baths && { baths: Number(baths) }),
-            ...(sqft && { sqft: Number(sqft) }),
-            ...(type && { type }),
-            ...(availability && { availability }),
-            ...(description && { description }),
-            ...(phone && { phone }),
-            googleMapLink: googleMapLink ?? property.googleMapLink,
-            amenities,
+            ...fields,
             image: imageUrls,
             // Any edit resets to pending so admin re-reviews
-            status: 'pending',
+            reviewStatus: 'pending',
             rejectionReason: '',
         };
 
@@ -807,7 +762,7 @@ export const updateUserListing = async (req, res) => {
         res.json({ success: true, message: 'Listing updated and resubmitted for review', property: updated });
     } catch (error) {
         logger.error("Error updating user listing", { error: error.message, stack: error.stack });
-        res.status(500).json({ success: false, message: 'Failed to update listing', error: error.message });
+        res.status(error.statusCode || 500).json({ success: false, message: error.message || 'Failed to update listing' });
     }
 };
 

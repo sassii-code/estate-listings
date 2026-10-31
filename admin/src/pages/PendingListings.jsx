@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import apiClient from "../services/apiClient";
 import { cn, formatPrice, formatDate } from "../lib/utils";
+import { formatArea } from "../constants/propertyOptions";
 
 // ─── Image Gallery + Lightbox ─────────────────────────────────────────────────
 const ImageGallery = ({ images, title }) => {
@@ -297,7 +298,7 @@ const ListingCard = ({ listing, onApprove, onReject, actionLoading }) => {
         {/* Location */}
         <p className="flex items-center gap-1.5 text-sm text-[#6B6B6A] mb-3">
           <MapPin className="w-3.5 h-3.5 text-[#D4755B] shrink-0" />
-          <span className="line-clamp-1">{listing.location}</span>
+          <span className="line-clamp-1">{listing.locality || listing.location}</span>
         </p>
 
         {/* Specs */}
@@ -306,20 +307,21 @@ const ListingCard = ({ listing, onApprove, onReject, actionLoading }) => {
             {formatPrice(listing.price)}
           </span>
           <span className="text-[#CCCCC9]">·</span>
-          <span className="flex items-center gap-1 text-xs text-[#6B6B6A]">
-            <BedDouble className="w-3.5 h-3.5" /> {listing.beds} bed
-          </span>
-          <span className="flex items-center gap-1 text-xs text-[#6B6B6A]">
+          {(listing.bedrooms ?? listing.beds) != null && <span className="flex items-center gap-1 text-xs text-[#6B6B6A]">
+            <BedDouble className="w-3.5 h-3.5" /> {listing.bedrooms ?? listing.beds} bed
+          </span>}
+          {listing.baths != null && <span className="flex items-center gap-1 text-xs text-[#6B6B6A]">
             <Bath className="w-3.5 h-3.5" /> {listing.baths} bath
-          </span>
+          </span>}
           <span className="flex items-center gap-1 text-xs text-[#6B6B6A]">
-            <Maximize className="w-3.5 h-3.5" /> {listing.sqft?.toLocaleString()} sqft
+            <Maximize className="w-3.5 h-3.5" /> {formatArea(listing.area, listing.areaUnit, listing.areaSqFt, listing.sqft)}
           </span>
-          {listing.availability && (
+          {(listing.purpose || listing.availability) && (
             <span className="text-xs text-[#9B9B99] bg-[#F5F5F3] px-2 py-0.5 rounded-full capitalize">
-              {listing.availability}
+              {listing.purpose || (listing.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale')}
             </span>
           )}
+          {listing.reraNumber && <span className="text-xs text-[#9B9B99]">RERA: {listing.reraNumber}</span>}
         </div>
 
         {/* Description */}
