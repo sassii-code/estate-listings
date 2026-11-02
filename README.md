@@ -575,7 +575,8 @@ npm run dev   # Starts admin panel on http://localhost:5174
 
 **🔐 Access Admin Panel:**
 - URL: http://localhost:5174
-- Login with credentials from `backend/.env`: `ADMIN_EMAIL` & `ADMIN_PASSWORD`
+- Login with `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `backend/.env.local` (or `backend/.env` if no local file exists).
+- Create the database account from the backend directory with `node scripts/createAdmin.js`.
 
 </details>
 

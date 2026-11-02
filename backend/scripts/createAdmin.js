@@ -1,14 +1,13 @@
-import dotenv from 'dotenv';
-import bcrypt from 'bcryptjs';
+import '../config/loadEnv.js';
 import mongoose from 'mongoose';
 import { Admin } from '../models/userModel.js';
 
-// Load environment variables
-dotenv.config({ path: './.env.local' });
-dotenv.config({ path: './.env' });
-
 const createAdminUser = async () => {
   try {
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables');
+    }
+
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
@@ -18,11 +17,6 @@ const createAdminUser = async () => {
     if (existingAdmin) {
       console.log('Admin user already exists');
       return;
-    }
-
-    // Validate environment variables
-    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
-      throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables');
     }
 
     // Create new admin user (password will be hashed by pre-save middleware)
