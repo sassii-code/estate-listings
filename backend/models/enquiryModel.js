@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+export const ENQUIRY_STATUSES = ['New', 'Contacted', 'Site visit', 'Closed', 'Not interested'];
+
 const enquirySchema = new mongoose.Schema({
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +39,16 @@ const enquirySchema = new mongoose.Schema({
   utm_campaign: {
     type: String,
     trim: true,
+  },
+  status: {
+    type: String,
+    enum: ENQUIRY_STATUSES,
+    default: 'New',
+  },
+  notes: {
+    type: String,
+    trim: true,
+    default: '',
   },
 }, {
   timestamps: true,

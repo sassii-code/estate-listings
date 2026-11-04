@@ -17,6 +17,7 @@ import {
   Building2,
   Menu,
   Cpu,
+  MessageSquareText,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import apiClient from '../services/apiClient';
@@ -55,6 +56,7 @@ const Sidebar = ({ isOpen, setIsOpen, isCollapsed, setIsCollapsed }) => {
         { path: '/list', label: 'All Properties', icon: Building2 },
         { path: '/users', label: 'Users', icon: Users },
         { path: '/appointments', label: 'Appointments', icon: Calendar },
+        { path: '/enquiries', label: 'Enquiries', icon: MessageSquareText },
       ],
     },
     {

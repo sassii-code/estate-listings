@@ -366,3 +366,21 @@ export const getMeetingLinkTemplate = (appointment, meetingLink) => wrap(
 
   <p style="font-size:13px;color:${BRAND.muted};margin:0;">Please join 5 minutes early. If you have any issues, reply to this email.</p>`
 );
+
+export const getEnquiryNotificationTemplate = (enquiry) => wrap(
+  'New Property Enquiry',
+  `<p style="margin:0 0 20px;font-size:15px;">A new property enquiry has been submitted.</p>
+
+  <div style="background:#ffffff;border:1px solid ${BRAND.border};border-radius:8px;padding:20px;margin-bottom:24px;">
+    <table style="width:100%;border-collapse:collapse;">
+      ${row('Property ID', escHtml(enquiry.propertyId))}
+      ${row('Name', escHtml(enquiry.name))}
+      ${row('Phone', `<a href="tel:${escHtml(enquiry.phone)}" style="color:${BRAND.color};">${escHtml(enquiry.phone)}</a>`)}
+      ${enquiry.email ? row('Email', escHtml(enquiry.email)) : ''}
+      ${row('Question', escHtml(enquiry.question))}
+      ${row('Source', escHtml(enquiry.utm_source || 'direct'))}
+      ${enquiry.utm_medium ? row('Medium', escHtml(enquiry.utm_medium)) : ''}
+      ${enquiry.utm_campaign ? row('Campaign', escHtml(enquiry.utm_campaign)) : ''}
+    </table>
+  </div>`
+);

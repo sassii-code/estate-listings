@@ -28,6 +28,7 @@ import {
   getEnhancedOverview,
 } from '../controller/adminController.js';
 import { listModels, createModel, updateModel, deleteModel } from '../controller/aiModelController.js';
+import { getAdminEnquiries, updateAdminEnquiry } from '../controller/enquiryController.js';
 import { adminProtect } from '../middleware/authMiddleware.js';
 import { registry } from '../utils/circuitBreaker.js';
 
@@ -39,6 +40,8 @@ router.use(adminProtect);
 router.get('/stats', getAdminStats);
 router.get('/appointments', getAllAppointments);
 router.put('/appointments/status', updateAppointmentStatus);
+router.get('/enquiries', getAdminEnquiries);
+router.put('/enquiries/:id', updateAdminEnquiry);
 
 // Listing review queue
 router.get('/properties/pending', getPendingListings);
