@@ -11,11 +11,13 @@ import PropertyAmenities from '../components/property-details/PropertyAmenities'
 import PropertyLocation from '../components/property-details/PropertyLocation';
 import ScheduleViewingCard from '../components/property-details/ScheduleViewingCard';
 import PropertyEnquiryForm from '../components/property-details/PropertyEnquiryForm';
+import PropertyContactActions from '../components/properties/PropertyContactActions';
 import { propertiesAPI } from '../services/api';
 import { useSEO } from '../hooks/useSEO';
 import StructuredData from '../components/common/StructuredData';
 import { formatPrice } from '../utils/formatPrice';
 import { formatArea } from '../utils/formatArea';
+import { getPropertyContactLinks } from '../utils/propertyContact';
 
 interface PropertyData {
   _id: string;
@@ -94,6 +96,13 @@ const PropertyDetailsPage: React.FC = () => {
     : property?.availability?.toLowerCase() === 'sold' ? 'Sold' : 'Available';
   const purpose = property?.purpose || (property?.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale');
   const areaLabel = property ? formatArea(property) : '';
+  const contactLinks = property
+    ? getPropertyContactLinks(property._id, property.title)
+    : { callHref: undefined, whatsAppHref: undefined };
+
+  const scrollToEnquiry = () => {
+    document.getElementById('property-enquiry')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   if (loading) {
     return (
@@ -149,7 +158,7 @@ const PropertyDetailsPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#FAF8F4] min-h-screen">
+    <div className="min-h-screen bg-[#FAF8F4] pb-16 md:pb-0">
       {/* Property Structured Data for SEO */}
       <StructuredData
         type="property"
@@ -201,6 +210,15 @@ const PropertyDetailsPage: React.FC = () => {
         area={areaLabel}
         reraNumber={property.reraNumber}
       />
+      {(contactLinks.callHref || contactLinks.whatsAppHref) && (
+        <div className="mx-auto max-w-[1280px] px-8 pt-5">
+          <PropertyContactActions
+            propertyId={property._id}
+            propertyTitle={property.title}
+            className="max-w-sm"
+          />
+        </div>
+      )}
 
       {/* Main Content Area */}
       <div className="bg-[#F2EFE9] py-12">
@@ -240,6 +258,34 @@ const PropertyDetailsPage: React.FC = () => {
       <section id="property-enquiry" className="scroll-mt-24 bg-[#FAF8F4] px-6 py-12">
         <PropertyEnquiryForm propertyId={property._id} propertyTitle={property.title} />
       </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-[#E6E0DA] bg-white/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(34,20,16,0.12)] backdrop-blur md:hidden">
+        {contactLinks.callHref && (
+          <a
+            href={contactLinks.callHref}
+            className="flex flex-1 items-center justify-center rounded-lg border border-[#D4755B] px-2 py-3 text-center font-manrope text-sm font-bold text-[#B86851]"
+          >
+            Call
+          </a>
+        )}
+        {contactLinks.whatsAppHref && (
+          <a
+            href={contactLinks.whatsAppHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center rounded-lg bg-[#25D366] px-2 py-3 text-center font-manrope text-sm font-bold text-white"
+          >
+            WhatsApp
+          </a>
+        )}
+        <button
+          type="button"
+          onClick={scrollToEnquiry}
+          className="flex-1 rounded-lg bg-[#D4755B] px-2 py-3 text-center font-manrope text-sm font-bold text-white"
+        >
+          Request a call back
+        </button>
+      </div>
 
       {/* Simple Footer */}
       <SimpleFooter />

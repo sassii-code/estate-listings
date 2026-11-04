@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getPropertyEnquiryUrl } from '../../utils/propertyEnquiry';
+import PropertyContactActions from '../properties/PropertyContactActions';
 
 // Placeholder for PropertyCard component
 // Will be implemented in the next iteration
@@ -69,6 +70,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           </div>
         </div>
+        <PropertyContactActions propertyId={id} propertyTitle={title} className="mt-4" />
         <Link
           to={getPropertyEnquiryUrl(id, search)}
           className="mt-5 block rounded-lg bg-[#D4755B] px-4 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4755B]"

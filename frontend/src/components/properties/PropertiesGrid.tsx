@@ -7,6 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize2 } from 'lucide-react';
 import { formatArea } from '../../utils/formatArea';
 import { getPropertyEnquiryUrl } from '../../utils/propertyEnquiry';
+import PropertyContactActions from './PropertyContactActions';
 
 const fallbackImages = [
   "https://images.unsplash.com/photo-1622015663381-d2e05ae91b72?w=800",
@@ -85,6 +86,11 @@ const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property
         </div>
       </div>
       </Link>
+      <PropertyContactActions
+        propertyId={property._id}
+        propertyTitle={property.title}
+        className="mt-3"
+      />
       <Link
         to={getPropertyEnquiryUrl(property._id, search)}
         className="mt-3 block rounded-lg bg-[#D4755B] px-4 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4755B]"

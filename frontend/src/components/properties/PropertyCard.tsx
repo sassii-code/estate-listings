@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Heart, MapPin } from 'lucide-react';
 import { getPropertyEnquiryUrl } from '../../utils/propertyEnquiry';
+import PropertyContactActions from './PropertyContactActions';
 
 interface PropertyCardProps {
   id: string;
@@ -97,6 +98,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
       </Link>
       <div className="px-4 pb-4">
+        <PropertyContactActions propertyId={id} propertyTitle={name} className="mb-2" />
         <Link
           to={getPropertyEnquiryUrl(id, search)}
           className="block w-full rounded-lg bg-[#D4755B] px-4 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4755B]"
