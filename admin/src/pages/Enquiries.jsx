@@ -13,6 +13,7 @@ const Enquiries = () => {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
   const [sourceFilter, setSourceFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [savingId, setSavingId] = useState(null);
 
   const fetchEnquiries = async () => {
@@ -47,6 +48,7 @@ const Enquiries = () => {
   const filteredEnquiries = enquiries.filter((enquiry) => (
     (statusFilter === "all" || (enquiry.status || "New") === statusFilter)
     && (sourceFilter === "all" || (enquiry.utm_source || "direct") === sourceFilter)
+    && (typeFilter === "all" || (enquiry.type || "Buyer") === typeFilter)
   ));
 
   const updateDraft = (id, field, value) => {
@@ -86,10 +88,22 @@ const Enquiries = () => {
             </div>
             <h1 className="text-3xl font-bold text-[#1C1B1A]">Enquiries</h1>
           </div>
-          <p className="text-[#5A5856]">Review property enquiries and track follow-ups.</p>
+          <p className="text-[#5A5856]">Review buyer and owner enquiries and track follow-ups.</p>
         </div>
 
         <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-[#E6D5C3] bg-white p-4 shadow-card sm:flex-row">
+          <label className="flex-1 text-sm font-medium text-[#5A5856]">
+            Enquiry type
+            <select
+              value={typeFilter}
+              onChange={(event) => setTypeFilter(event.target.value)}
+              className="mt-1.5 block w-full rounded-lg border border-[#E6D5C3] bg-[#FAF8F4] px-3 py-2.5 text-[#1C1B1A] outline-none focus:border-[#D4755B]"
+            >
+              <option value="all">All enquiries</option>
+              <option value="Buyer">Buyer enquiries</option>
+              <option value="Owner">Owner enquiries</option>
+            </select>
+          </label>
           <label className="flex-1 text-sm font-medium text-[#5A5856]">
             Status
             <select
@@ -124,10 +138,10 @@ const Enquiries = () => {
             <p className="py-16 text-center text-[#5A5856]">No enquiries match these filters.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1250px]">
+              <table className="w-full min-w-[1400px]">
                 <thead>
                   <tr className="bg-[#1C1B1A]">
-                    {["Date", "Name", "Phone", "Email", "Property", "Question", "Source", "Status", "Notes", ""].map((heading, index) => (
+                    {["Type", "Date", "Name", "Phone", "Email", "Property details", "Message", "Source", "Status", "Notes", ""].map((heading, index) => (
                       <th key={`${heading}-${index}`} className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">
                         {heading}
                       </th>
@@ -140,6 +154,11 @@ const Enquiries = () => {
                     const draft = drafts[enquiry._id] || { status: "New", notes: "" };
                     return (
                       <tr key={enquiry._id} className="align-top transition-colors hover:bg-[#FAF8F4]">
+                        <td className="px-4 py-4 text-sm">
+                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${enquiry.type === "Owner" ? "bg-[#FCE9E2] text-[#A9472E]" : "bg-[#F5F1E8] text-[#5A5856]"}`}>
+                            {enquiry.type || "Buyer"}
+                          </span>
+                        </td>
                         <td className="whitespace-nowrap px-4 py-4 text-sm text-[#5A5856]">{formatDate(enquiry.createdAt)}</td>
                         <td className="px-4 py-4 text-sm font-semibold text-[#1C1B1A]">{enquiry.name}</td>
                         <td className="whitespace-nowrap px-4 py-4 text-sm">
@@ -153,9 +172,16 @@ const Enquiries = () => {
                             <Link className="font-medium text-[#B85E45] hover:underline" to={`/update/${propertyId}`}>
                               {enquiry.propertyId?.title || "View property"}
                             </Link>
+                          ) : enquiry.type === "Owner" ? (
+                            <div className="space-y-1 text-[#5A5856]">
+                              <p>{enquiry.propertyType || "Property type not provided"}</p>
+                              <p>{enquiry.locality || "Locality not provided"}</p>
+                              <p>{enquiry.purpose || "Purpose not provided"}</p>
+                              {enquiry.expectedPrice != null && <p>₹{Number(enquiry.expectedPrice).toLocaleString("en-IN")}</p>}
+                            </div>
                           ) : <span className="text-[#9B9B99]">Unavailable</span>}
                         </td>
-                        <td className="max-w-xs whitespace-pre-wrap px-4 py-4 text-sm text-[#5A5856]">{enquiry.question}</td>
+                        <td className="max-w-xs whitespace-pre-wrap px-4 py-4 text-sm text-[#5A5856]">{enquiry.question || "—"}</td>
                         <td className="px-4 py-4 text-sm text-[#5A5856]">{enquiry.utm_source || "direct"}</td>
                         <td className="min-w-40 px-4 py-4">
                           <select

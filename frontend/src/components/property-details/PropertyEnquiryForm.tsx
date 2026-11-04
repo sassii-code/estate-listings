@@ -22,6 +22,7 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
     event.preventDefault();
     setSubmitting(true);
     setError(null);
+    const formData = new FormData(event.currentTarget);
 
     try {
       const utmParameters = new URLSearchParams(search);
@@ -29,8 +30,10 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
         name: name.trim(),
         phone,
         email: email.trim() || undefined,
+        type: 'Buyer',
         question: question.trim(),
         propertyId,
+        website: String(formData.get('website') || ''),
         utm_source: utmParameters.get('utm_source')?.trim() || 'direct',
         utm_medium: utmParameters.get('utm_medium')?.trim() || '',
         utm_campaign: utmParameters.get('utm_campaign')?.trim() || '',
@@ -56,6 +59,16 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
         <>
           <h2 className="mb-6 font-fraunces text-2xl font-bold text-[#221410]">Ask about this property</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="absolute -left-[10000px]" aria-hidden="true">
+              <label htmlFor="enquiry-website">Leave this field empty</label>
+              <input
+                id="enquiry-website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <div>
               <label htmlFor="enquiry-name" className="mb-1.5 block font-manrope text-sm font-medium text-[#374151]">
                 Name

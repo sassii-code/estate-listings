@@ -10,6 +10,7 @@ import StructuredData from './components/common/StructuredData';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const PropertiesPage = lazy(() => import('./pages/PropertiesPage'));
 const PropertyDetailsPage = lazy(() => import('./pages/PropertyDetailsPage'));
+const OwnerEnquiryPage = lazy(() => import('./pages/OwnerEnquiryPage'));
 const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 
@@ -48,6 +49,7 @@ function AnimatedRoutes() {
           <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
           <Route path="/properties" element={<PageTransition><PropertiesPage /></PageTransition>} />
           <Route path="/property/:id" element={<PageTransition><PropertyDetailsPage /></PageTransition>} />
+          <Route path="/sell-property" element={<PageTransition><OwnerEnquiryPage /></PageTransition>} />
           <Route path="/about" element={<PageTransition><AboutUsPage /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
           <Route path="*" element={<NotFoundPage />} />

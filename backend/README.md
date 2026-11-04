@@ -188,7 +188,7 @@ Server initializes and binds to `http://localhost:4000`
 | Request | Route Namespace               | Restrictions | Purpose                                              |
 | ------- | ----------------------------- | ------------ | ---------------------------------------------------- |
 | `POST`  | `/api/forms/submit`           | Public       | Parse generic contact payloads into storage          |
-| `POST`  | `/api/enquiries`              | Public       | Submit a property enquiry and tracking parameters     |
+| `POST`  | `/api/enquiries`              | Public       | Submit buyer or owner enquiries with UTM tracking; limited to 5 submissions per 15 minutes per IP |
 | `POST`  | `/api/ai/search`              | X-Firecrawl-Key header | Live AI property search (SSE stream; model selectable) |
 | `GET`   | `/api/ai/models`              | Public       | List active AI models for the search form           |
 | `GET`   | `/api/locations/:city/trends` | X-Firecrawl-Key header | Locality price trends + AI analysis (cached)  |

@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 const navLinks = [
   { path: '/', label: 'Home' },
   { path: '/properties', label: 'Properties' },
+  { path: '/sell-property', label: 'Sell / Rent' },
   { path: '/about', label: 'About' },
   { path: '/contact', label: 'Contact' },
 ];

@@ -368,16 +368,20 @@ export const getMeetingLinkTemplate = (appointment, meetingLink) => wrap(
 );
 
 export const getEnquiryNotificationTemplate = (enquiry) => wrap(
-  'New Property Enquiry',
-  `<p style="margin:0 0 20px;font-size:15px;">A new property enquiry has been submitted.</p>
+  enquiry.type === 'Owner' ? 'New Owner Enquiry' : 'New Property Enquiry',
+  `<p style="margin:0 0 20px;font-size:15px;">A new ${enquiry.type === 'Owner' ? 'owner' : 'property'} enquiry has been submitted.</p>
 
   <div style="background:#ffffff;border:1px solid ${BRAND.border};border-radius:8px;padding:20px;margin-bottom:24px;">
     <table style="width:100%;border-collapse:collapse;">
-      ${row('Property ID', escHtml(enquiry.propertyId))}
+      ${enquiry.propertyId ? row('Property ID', escHtml(enquiry.propertyId)) : ''}
+      ${enquiry.type === 'Owner' && enquiry.propertyType ? row('Property type', escHtml(enquiry.propertyType)) : ''}
+      ${enquiry.type === 'Owner' && enquiry.locality ? row('Locality', escHtml(enquiry.locality)) : ''}
+      ${enquiry.type === 'Owner' && enquiry.purpose ? row('Purpose', escHtml(enquiry.purpose)) : ''}
+      ${enquiry.type === 'Owner' && enquiry.expectedPrice ? row('Expected price', escHtml(enquiry.expectedPrice)) : ''}
       ${row('Name', escHtml(enquiry.name))}
       ${row('Phone', `<a href="tel:${escHtml(enquiry.phone)}" style="color:${BRAND.color};">${escHtml(enquiry.phone)}</a>`)}
       ${enquiry.email ? row('Email', escHtml(enquiry.email)) : ''}
-      ${row('Question', escHtml(enquiry.question))}
+      ${enquiry.question ? row(enquiry.type === 'Owner' ? 'Message' : 'Question', escHtml(enquiry.question)) : ''}
       ${row('Source', escHtml(enquiry.utm_source || 'direct'))}
       ${enquiry.utm_medium ? row('Medium', escHtml(enquiry.utm_medium)) : ''}
       ${enquiry.utm_campaign ? row('Campaign', escHtml(enquiry.utm_campaign)) : ''}

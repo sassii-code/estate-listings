@@ -3,10 +3,33 @@ import mongoose from 'mongoose';
 export const ENQUIRY_STATUSES = ['New', 'Contacted', 'Site visit', 'Closed', 'Not interested'];
 
 const enquirySchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Buyer', 'Owner'],
+    default: 'Buyer',
+  },
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
-    required: true,
+    required: function requirePropertyForBuyer() {
+      return this.type !== 'Owner';
+    },
+  },
+  propertyType: {
+    type: String,
+    trim: true,
+  },
+  locality: {
+    type: String,
+    trim: true,
+  },
+  purpose: {
+    type: String,
+    enum: ['Sell', 'Rent out'],
+  },
+  expectedPrice: {
+    type: Number,
+    min: 0,
   },
   name: {
     type: String,
@@ -24,7 +47,9 @@ const enquirySchema = new mongoose.Schema({
   },
   question: {
     type: String,
-    required: true,
+    required: function requireQuestionForBuyer() {
+      return this.type !== 'Owner';
+    },
     trim: true,
   },
   utm_source: {

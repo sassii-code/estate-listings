@@ -42,11 +42,17 @@ export const appointmentsAPI = {
 // Property enquiries
 export const enquiriesAPI = {
   submit: (data: {
+    type?: 'Buyer' | 'Owner';
     name: string;
     phone: string;
     email?: string;
-    question: string;
-    propertyId: string;
+    question?: string;
+    propertyId?: string;
+    propertyType?: string;
+    locality?: string;
+    purpose?: 'Sell' | 'Rent out';
+    expectedPrice?: number;
+    website?: string;
     utm_source: string;
     utm_medium: string;
     utm_campaign: string;
