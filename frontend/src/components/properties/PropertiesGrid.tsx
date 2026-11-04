@@ -103,7 +103,7 @@ const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property
 
 const PropertiesGrid: React.FC<PropertiesGridProps> = ({ properties, viewMode = 'grid' }) => {
   return (
-    <div className="max-w-[1440px] mx-auto px-6 pb-16 pt-4">
+    <div className="w-full pb-16 pt-4">
       {viewMode === 'grid' ? (
         <motion.div
           variants={container}
