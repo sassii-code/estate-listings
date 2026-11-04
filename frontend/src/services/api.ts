@@ -39,6 +39,20 @@ export const appointmentsAPI = {
 
 };
 
+// Property enquiries
+export const enquiriesAPI = {
+  submit: (data: {
+    name: string;
+    phone: string;
+    email?: string;
+    question: string;
+    propertyId: string;
+    utm_source: string;
+    utm_medium: string;
+    utm_campaign: string;
+  }) => apiClient.post('/enquiries', data),
+};
+
 // Contact Form
 export const contactAPI = {
   submit: (data: { name: string; email: string; phone: string; message: string }) =>
@@ -46,4 +60,3 @@ export const contactAPI = {
 };
 
 export default apiClient;
-

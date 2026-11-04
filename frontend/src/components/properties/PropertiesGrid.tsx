@@ -3,9 +3,10 @@ import { motion, type Variants } from 'framer-motion';
 import PropertyCard from './PropertyCard';
 import type { Property } from '../../pages/PropertiesPage';
 import { formatPrice } from '../../utils/formatPrice';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize2 } from 'lucide-react';
 import { formatArea } from '../../utils/formatArea';
+import { getPropertyEnquiryUrl } from '../../utils/propertyEnquiry';
 
 const fallbackImages = [
   "https://images.unsplash.com/photo-1622015663381-d2e05ae91b72?w=800",
@@ -32,6 +33,7 @@ const item: Variants = {
 
 // List view row — more compact than the card
 const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property, index }) => {
+  const { search } = useLocation();
   const img = property.image?.[0] || fallbackImages[index % fallbackImages.length];
   const badge = marketStatus(property).toUpperCase();
   const purpose = property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale');
@@ -39,7 +41,8 @@ const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property
   const area = formatArea(property);
 
   return (
-    <Link to={`/property/${property._id}`} className="group block outline-none focus-visible:ring-2 focus-visible:ring-[#D4755B] rounded-2xl">
+    <div>
+      <Link to={`/property/${property._id}`} className="group block outline-none focus-visible:ring-2 focus-visible:ring-[#D4755B] rounded-2xl">
       <div className="bg-white rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.09)] transition-shadow duration-300 flex gap-0">
         {/* Thumbnail */}
         <div className="relative w-52 shrink-0 overflow-hidden">
@@ -81,7 +84,14 @@ const PropertyRow: React.FC<{ property: Property; index: number }> = ({ property
           </div>
         </div>
       </div>
-    </Link>
+      </Link>
+      <Link
+        to={getPropertyEnquiryUrl(property._id, search)}
+        className="mt-3 block rounded-lg bg-[#D4755B] px-4 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4755B]"
+      >
+        Get price and details
+      </Link>
+    </div>
   );
 };
 
@@ -107,7 +117,7 @@ const PropertiesGrid: React.FC<PropertiesGridProps> = ({ properties, viewMode = 
                 baths={property.baths}
                 area={formatArea(property)}
                 badge={marketStatus(property).toUpperCase()}
-                tags={[property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale'), property.category, property.type].filter(Boolean)}
+                tags={[property.purpose || (property.availability?.toLowerCase() === 'rent' ? 'Rent' : 'Sale'), property.category, property.type].filter((tag): tag is string => Boolean(tag))}
               />
             </motion.div>
           ))}

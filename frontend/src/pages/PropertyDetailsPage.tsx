@@ -10,10 +10,12 @@ import PropertyAbout from '../components/property-details/PropertyAbout';
 import PropertyAmenities from '../components/property-details/PropertyAmenities';
 import PropertyLocation from '../components/property-details/PropertyLocation';
 import ScheduleViewingCard from '../components/property-details/ScheduleViewingCard';
+import PropertyEnquiryForm from '../components/property-details/PropertyEnquiryForm';
 import { propertiesAPI } from '../services/api';
 import { useSEO } from '../hooks/useSEO';
 import StructuredData from '../components/common/StructuredData';
 import { formatPrice } from '../utils/formatPrice';
+import { formatArea } from '../utils/formatArea';
 
 interface PropertyData {
   _id: string;
@@ -80,6 +82,12 @@ const PropertyDetailsPage: React.FC = () => {
 
     fetchProperty();
   }, [id]);
+
+  useEffect(() => {
+    if (property && window.location.hash === '#property-enquiry') {
+      document.getElementById('property-enquiry')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [property]);
 
   const marketStatus = ['Available', 'Under offer', 'Sold', 'Rented'].includes(property?.status || '')
     ? property!.status!
@@ -228,6 +236,10 @@ const PropertyDetailsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <section id="property-enquiry" className="scroll-mt-24 bg-[#FAF8F4] px-6 py-12">
+        <PropertyEnquiryForm propertyId={property._id} propertyTitle={property.title} />
+      </section>
 
       {/* Simple Footer */}
       <SimpleFooter />

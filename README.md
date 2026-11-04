@@ -643,6 +643,7 @@ npm run dev   # Starts admin panel on http://localhost:5174
 |---|---|---|
 | POST | /api/ai/search | AI property search (requires user API keys) |
 | GET | /api/locations/:city/trends | Location market trends (requires user API keys) |
+| POST | /api/enquiries | Submit a property enquiry |
 | POST | /api/forms/submit | Contact form submission |
 | GET | /api/admin/stats | Dashboard statistics (admin) |
 

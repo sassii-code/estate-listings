@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { getPropertyEnquiryUrl } from '../../utils/propertyEnquiry';
 
 // Placeholder for PropertyCard component
 // Will be implemented in the next iteration
@@ -17,6 +19,7 @@ interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
+  id,
   image,
   title,
   location,
@@ -27,8 +30,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   featured,
   aiMatch,
 }) => {
+  const { search } = useLocation();
+
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 cursor-pointer">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
       <div className="relative h-64">
         <img src={image} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
         {featured && (
@@ -64,6 +69,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </div>
           </div>
         </div>
+        <Link
+          to={getPropertyEnquiryUrl(id, search)}
+          className="mt-5 block rounded-lg bg-[#D4755B] px-4 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4755B]"
+        >
+          Get price and details
+        </Link>
       </div>
     </div>
   );
