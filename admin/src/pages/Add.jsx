@@ -37,6 +37,7 @@ const PropertyForm = () => {
     category: 'Residential',
     type: 'Flat',
     status: 'Available',
+    showOnHomepage: false,
     locality: '',
     price: '',
     area: '',
@@ -125,7 +126,7 @@ const PropertyForm = () => {
         setFormData({
           title: '', purpose: 'Sale', category: 'Residential', type: 'Flat', status: 'Available',
           locality: '', price: '', area: '', areaUnit: 'sq ft', areaSqFt: '',
-          bedrooms: '', reraNumber: '', description: '', baths: '', phone: '',
+          bedrooms: '', reraNumber: '', description: '', baths: '', phone: '', showOnHomepage: false,
           amenities: [], googleMapLink: '', images: [],
         });
         setPreviewUrls([]);
@@ -213,6 +214,19 @@ const PropertyForm = () => {
                   </select>
                 </div>
               </div>
+              <label className="flex items-center gap-3 rounded-xl border border-[#E6D5C3] bg-[#FAF8F4] p-4 text-base font-semibold text-[#1C1B1A]">
+                <input
+                  type="checkbox"
+                  name="showOnHomepage"
+                  checked={formData.showOnHomepage}
+                  onChange={(event) => setFormData((previous) => ({
+                    ...previous,
+                    showOnHomepage: event.target.checked,
+                  }))}
+                  className="h-5 w-5 accent-[#0F5E5A]"
+                />
+                Show on homepage
+              </label>
             </div>
           </div>
 

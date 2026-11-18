@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { Grid2X2, List } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
@@ -86,7 +85,7 @@ const PropertiesPage: React.FC = () => {
   const filters = useMemo(() => parseFilters(searchParams), [searchParams]);
 
   useSEO({
-    title: 'Browse Properties in Mumbai, Delhi, Bangalore & More',
+    title: 'Browse Properties in Haridwar',
     description: 'Browse properties for sale or rent. Filter by category, property type, locality, budget, and size.',
     url: 'https://buildestate.vercel.app/properties',
   });
@@ -95,7 +94,6 @@ const PropertiesPage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState('featured');
 
   const updateFilters = (nextFilters: FilterState) => {
     const nextParams = new URLSearchParams(searchParams);
@@ -164,15 +162,8 @@ const PropertiesPage: React.FC = () => {
       });
     }
 
-    switch (sortBy) {
-      case 'price-low': result.sort((a, b) => a.price - b.price); break;
-      case 'price-high': result.sort((a, b) => b.price - a.price); break;
-      case 'beds': result.sort((a, b) => (b.bedrooms ?? b.beds ?? 0) - (a.bedrooms ?? a.beds ?? 0)); break;
-      case 'newest': result.sort((a, b) => b._id.localeCompare(a._id)); break;
-    }
-
     return result;
-  }, [properties, filters, sortBy]);
+  }, [properties, filters]);
 
   return (
     <div className="bg-[#FAF8F4] min-h-screen">
@@ -192,33 +183,20 @@ const PropertiesPage: React.FC = () => {
                 {filteredProperties.length} {filteredProperties.length === 1 ? 'property' : 'properties'}
               </p>
               <div className="flex items-center gap-2">
-                <label htmlFor="property-sort" className="sr-only">Sort properties</label>
-                <select
-                  id="property-sort"
-                  value={sortBy}
-                  onChange={event => setSortBy(event.target.value)}
-                  className="h-10 rounded-xl border border-[#E6E0DA] bg-white px-3 text-sm text-[#221410] focus:border-[#D4755B] focus:outline-none"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="newest">Newest</option>
-                  <option value="beds">Most Beds</option>
-                </select>
                 <div className="flex items-center gap-1 rounded-xl bg-[#F5F1E8] p-1">
                   {([
-                    { mode: 'grid', Icon: Grid2X2 },
-                    { mode: 'list', Icon: List },
+                    { mode: 'grid', Icon: Grid2X2, label: 'Grid view' },
+                    { mode: 'list', Icon: List, label: 'List view' },
                   ] as const).map(({ mode, Icon }) => (
                     <button
                       key={mode}
                       type="button"
                       onClick={() => setViewMode(mode)}
-                      aria-label={`${mode} view`}
                       aria-pressed={viewMode === mode}
-                      className={`flex h-8 w-8 items-center justify-center rounded-lg ${viewMode === mode ? 'bg-white text-[#221410] shadow-sm' : 'text-[#6B7280]'}`}
+                      className={`flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 ${viewMode === mode ? 'bg-white text-[#2E3A3F] shadow-sm' : 'text-[#2E3A3F]'}`}
                     >
                       <Icon className="h-4 w-4" />
+                      <span>{label}</span>
                     </button>
                   ))}
                 </div>
@@ -243,9 +221,7 @@ const PropertiesPage: React.FC = () => {
             )}
 
             {!loading && !error && filteredProperties.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
+              <div
                 className="flex min-h-[320px] items-center justify-center rounded-2xl border border-dashed border-[#D4C4BC] bg-white/70 px-6 py-16"
               >
                 <div className="text-center">
@@ -260,7 +236,7 @@ const PropertiesPage: React.FC = () => {
                     Clear filters
                   </button>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {!loading && !error && filteredProperties.length > 0 && (

@@ -38,7 +38,7 @@ const Update = () => {
     title: '', purpose: 'Sale', category: 'Residential', type: 'Flat', status: 'Available',
     locality: '', price: '', area: '', areaUnit: 'sq ft', areaSqFt: '',
     bedrooms: '', reraNumber: '', description: '', baths: '', phone: '',
-    amenities: [], googleMapLink: '', images: [],
+    amenities: [], googleMapLink: '', images: [], showOnHomepage: false,
   });
   const [previewUrls, setPreviewUrls] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -80,6 +80,7 @@ const Update = () => {
             baths: property.baths ?? '',
             phone: property.phone,
             amenities, googleMapLink: property.googleMapLink || '', images: property.image,
+            showOnHomepage: property.showOnHomepage === true,
           });
           setPreviewUrls(property.image);
         } else {
@@ -140,7 +141,7 @@ const Update = () => {
     try {
       const formdata = new FormData();
       formdata.append('id', id);
-      ['title', 'purpose', 'category', 'type', 'status', 'locality', 'price', 'description', 'bedrooms', 'baths', 'area', 'areaUnit', 'areaSqFt', 'reraNumber', 'phone', 'googleMapLink'].forEach((key) => {
+      ['title', 'purpose', 'category', 'type', 'status', 'locality', 'price', 'description', 'bedrooms', 'baths', 'area', 'areaUnit', 'areaSqFt', 'reraNumber', 'phone', 'googleMapLink', 'showOnHomepage'].forEach((key) => {
         formdata.append(key, formData[key]);
       });
       formData.amenities.forEach((amenity, i) => formdata.append(`amenities[${i}]`, amenity));
@@ -237,6 +238,19 @@ const Update = () => {
                   </select>
                 </div>
               </div>
+              <label className="flex items-center gap-3 rounded-xl border border-[#E6D5C3] bg-[#FAF8F4] p-4 text-base font-semibold text-[#1C1B1A]">
+                <input
+                  type="checkbox"
+                  name="showOnHomepage"
+                  checked={formData.showOnHomepage}
+                  onChange={(event) => setFormData((previous) => ({
+                    ...previous,
+                    showOnHomepage: event.target.checked,
+                  }))}
+                  className="h-5 w-5 accent-[#0F5E5A]"
+                />
+                Show on homepage
+              </label>
             </div>
           </div>
 

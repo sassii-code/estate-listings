@@ -31,53 +31,35 @@ const AboutHeritageSection: React.FC = () => {
 
           {/* Right - Content */}
           <div className="lg:pt-16">
-            {/* Label */}
-            <div className="mb-6">
-              <p className="font-space-mono text-xs text-[#D4755B] uppercase tracking-[2.4px]">
-                Our Heritage
-              </p>
-            </div>
-
             {/* Headline */}
             <h2 className="mb-6">
               <span className="font-syne text-[40px] leading-[50px] text-[#221410] block font-semibold">
-                Redefining the Real Estate Landscape with
+                Helping You Find the Right
               </span>
-              <span className="font-fraunces italic text-[40px] leading-[50px] text-[#D4755B] block">
-                Better Property Discovery
+              <span className="font-fraunces text-[40px] leading-[50px] text-[#D4755B] block">
+                Property in Haridwar
               </span>
             </h2>
 
             {/* Description Paragraphs */}
             <div className="space-y-6 mb-8">
               <p className="font-manrope font-extralight text-base leading-[26px] text-[#4b5563]">
-                Founded by architects and data scientists, BuildEstate emerged from a
-                simple observation: the search for a home had become a transaction, losing
-                the emotional resonance of finding one's sanctuary.
+                Finding the right property takes local knowledge and a clear understanding of what matters to you.
               </p>
 
               <p className="font-manrope font-extralight text-base leading-[26px] text-[#4b5563]">
-                We set out to bridge the gap between cold data and warm living spaces. By
-                harnessing advanced AI, we don't just match square footage; we match
-                lifestyles, aesthetics, and the intangible feelings that make a house a home.
+                MAA DURGA PROPERTIES works with people looking to buy, sell, or rent residential,
+                commercial, and industrial property in Haridwar.
               </p>
             </div>
 
-            {/* Blockquote */}
-            <blockquote className="border-l-4 border-[#D4755B] pl-6 mb-8">
-              <p className="font-fraunces italic text-2xl leading-8 text-[#D4755B]">
-                "We believe finding a home should be inspiring,
-                not exhausting."
-              </p>
-            </blockquote>
-
             {/* Link */}
             <a 
-              href="#team" 
+              href="/contact"
               className="inline-flex items-center gap-2 border-b border-[#221410] pb-1 group hover:border-[#D4755B] transition-[border-color]"
             >
               <span className="font-space-mono text-sm text-[#221410] group-hover:text-[#D4755B] transition-[color]">
-                Meet the Architects
+                Talk to our team
               </span>
 
               <ArrowRight className="w-4 h-4 text-[#221410] group-hover:text-[#D4755B] transition-[color]" />

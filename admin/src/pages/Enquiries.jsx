@@ -138,10 +138,10 @@ const Enquiries = () => {
             <p className="py-16 text-center text-[#5A5856]">No enquiries match these filters.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1400px]">
+              <table className="w-full min-w-[1280px]">
                 <thead>
                   <tr className="bg-[#1C1B1A]">
-                    {["Type", "Date", "Name", "Phone", "Email", "Property details", "Message", "Source", "Status", "Notes", ""].map((heading, index) => (
+                    {["Type", "Date", "Name", "Phone", "Property details", "Message", "Source", "Status", "Notes", ""].map((heading, index) => (
                       <th key={`${heading}-${index}`} className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">
                         {heading}
                       </th>
@@ -163,9 +163,6 @@ const Enquiries = () => {
                         <td className="px-4 py-4 text-sm font-semibold text-[#1C1B1A]">{enquiry.name}</td>
                         <td className="whitespace-nowrap px-4 py-4 text-sm">
                           <a className="font-medium text-[#B85E45] hover:underline" href={`tel:${enquiry.phone}`}>{enquiry.phone}</a>
-                        </td>
-                        <td className="px-4 py-4 text-sm">
-                          {enquiry.email ? <a className="text-[#B85E45] hover:underline" href={`mailto:${enquiry.email}`}>{enquiry.email}</a> : <span className="text-[#9B9B99]">—</span>}
                         </td>
                         <td className="px-4 py-4 text-sm">
                           {propertyId ? (

@@ -210,9 +210,11 @@ const Appointments = () => {
                             <p className="text-sm font-semibold text-[#1C1B1A]">
                               {appointment.userId?.name || appointment.guestInfo?.name || "Unknown"}
                             </p>
-                            <p className="text-xs text-[#9CA3AF]">
-                              {appointment.userId?.email || appointment.guestInfo?.email || "—"}
-                            </p>
+                            {(appointment.userId?.email || appointment.guestInfo?.email) && (
+                              <p className="text-xs text-[#9CA3AF]">
+                                {appointment.userId?.email || appointment.guestInfo?.email}
+                              </p>
+                            )}
                             {!appointment.userId && appointment.guestInfo && (
                               <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-600 border border-amber-200 rounded-full font-medium">Guest</span>
                             )}

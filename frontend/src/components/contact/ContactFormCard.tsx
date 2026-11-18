@@ -4,9 +4,7 @@ import { contactAPI } from '../../services/api';
 
 const ContactFormCard: React.FC = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+    name: '',
     phoneNumber: '',
     message: ''
   });
@@ -31,15 +29,14 @@ const ContactFormCard: React.FC = () => {
     try {
       // Map frontend fields to backend schema
       await contactAPI.submit({
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
-        email: formData.email,
+        name: formData.name.trim(),
         phone: formData.phoneNumber,
         message: formData.message,
       });
 
       setStatus('success');
       setStatusMessage('Message sent successfully! We\'ll get back to you within 24 hours.');
-      setFormData({ firstName: '', lastName: '', email: '', phoneNumber: '', message: '' });
+      setFormData({ name: '', phoneNumber: '', message: '' });
     } catch (err: any) {
       setStatus('error');
       setStatusMessage(
@@ -64,50 +61,17 @@ const ContactFormCard: React.FC = () => {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* First Name & Last Name Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block font-manrope font-extralight text-xs text-[#64748B] uppercase tracking-wider mb-2">
-              First Name
-            </label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              placeholder="John"
-              className="w-full bg-[#F5F1E8] border border-[#E6E0DA] rounded-lg px-4 py-3 font-manrope font-extralight text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#D4755B] transition-[border-color]"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-manrope font-extralight text-xs text-[#64748B] uppercase tracking-wider mb-2">
-              Last Name
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              placeholder="Doe"
-              className="w-full bg-[#F5F1E8] border border-[#E6E0DA] rounded-lg px-4 py-3 font-manrope font-extralight text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#D4755B] transition-[border-color]"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Email */}
+        {/* Name */}
         <div>
-          <label className="block font-manrope font-extralight text-xs text-[#64748B] uppercase tracking-wider mb-2">
-            Email
+          <label className="block font-manrope font-semibold text-base text-[#2E3A3F] mb-2">
+            Name
           </label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="name"
+            value={formData.name}
             onChange={handleInputChange}
-            placeholder="john.doe@example.com"
+            placeholder="Your name"
             className="w-full bg-[#F5F1E8] border border-[#E6E0DA] rounded-lg px-4 py-3 font-manrope font-extralight text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#D4755B] transition-[border-color]"
             required
           />
@@ -115,7 +79,7 @@ const ContactFormCard: React.FC = () => {
 
         {/* Phone Number */}
         <div>
-          <label className="block font-manrope font-extralight text-xs text-[#64748B] uppercase tracking-wider mb-2">
+          <label className="block font-manrope font-semibold text-base text-[#2E3A3F] mb-2">
             Phone Number
           </label>
           <input
@@ -123,7 +87,7 @@ const ContactFormCard: React.FC = () => {
             name="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleInputChange}
-            placeholder="+91 98765 43210"
+            placeholder="Your phone number"
             className="w-full bg-[#F5F1E8] border border-[#E6E0DA] rounded-lg px-4 py-3 font-manrope font-extralight text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#D4755B] transition-[border-color]"
             required
           />
@@ -131,7 +95,7 @@ const ContactFormCard: React.FC = () => {
 
         {/* Message */}
         <div>
-          <label className="block font-manrope font-extralight text-xs text-[#64748B] uppercase tracking-wider mb-2">
+          <label className="block font-manrope font-semibold text-base text-[#2E3A3F] mb-2">
             Message
           </label>
           <textarea
@@ -149,7 +113,7 @@ const ContactFormCard: React.FC = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#D4755B] hover:bg-[#C05621] disabled:opacity-60 disabled:cursor-not-allowed text-white font-manrope font-bold text-base py-3.5 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          className="w-full bg-[#F2A900] disabled:opacity-60 disabled:cursor-not-allowed text-[#2E3A3F] font-bold text-base py-3.5 rounded-xl flex items-center justify-center gap-2"
         >
           {loading ? (
             <>

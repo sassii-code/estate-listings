@@ -192,7 +192,7 @@ export const scheduleViewing = async (req, res) => {
 
     // req.user is set by protect middleware (may be undefined for guest route)
     const userId = req.user?._id;
-    const guestEmail = email;
+    const guestEmail = typeof email === 'string' ? email.trim() : '';
     const guestName = name;
 
     // Check if property exists
@@ -227,7 +227,7 @@ export const scheduleViewing = async (req, res) => {
       notes: notes || message || '',
       status: 'pending',
       ...(userId && { userId }),
-      ...(!userId && { guestInfo: { name: guestName, email: guestEmail, phone } })
+      ...(!userId && { guestInfo: { name: guestName, ...(guestEmail && { email: guestEmail }), phone } })
     };
 
     const appointment = new Appointment(appointmentData);
@@ -360,7 +360,7 @@ export const updateAppointmentMeetingLink = async (req, res) => {
     if (recipientEmail) {
       emailService.sendEmailSafely(
         recipientEmail,
-        'Your Virtual Meeting Link - BuildEstate',
+        'Your Virtual Meeting Link - MAA DURGA PROPERTIES',
         getMeetingLinkTemplate(appointment, meetingLink)
       );
     }

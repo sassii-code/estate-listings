@@ -12,23 +12,23 @@ const FAQSection: React.FC = () => {
   const faqs: FAQItem[] = [
     {
       id: 1,
-      question: "How does the AI matching process work?",
-      answer: "Our proprietary algorithm analyzes over 50 data points from your preferences and lifestyle inputs to suggest properties that align with your unique needs, often uncovering options you might have missed."
+      question: "What kinds of property can I ask about?",
+      answer: "You can contact us about residential, commercial, and industrial property in Haridwar."
     },
     {
       id: 2,
-      question: "What areas do you currently cover?",
-      answer: "We currently cover major metropolitan areas including Ahmedabad, Mumbai, Delhi, Bangalore, and Pune. We're expanding to more cities across India and will update our coverage area regularly."
+      question: "Can you help me buy, sell, or rent a property?",
+      answer: "Yes. Get in touch and tell us what you are looking for or what you would like to list."
     },
     {
       id: 3,
-      question: "Can I list my property exclusively with BuildEstate?",
-      answer: "Yes, we offer exclusive listing agreements with premium marketing benefits including professional photography, virtual tours, AI-powered listing optimization, and dedicated property consultant support throughout the selling process."
+      question: "How do I arrange a property visit?",
+      answer: "Contact us with the property you are interested in and we can discuss a suitable time."
     },
     {
       id: 4,
-      question: "How do I schedule a virtual tour?",
-      answer: "You can schedule a virtual tour directly from any property listing page by clicking the 'Schedule Virtual Tour' button. Choose your preferred date and time, and our team will send you a confirmation with the video conference link."
+      question: "How do I share a property for sale or rent?",
+      answer: "Use the Sell or Rent Out form and provide the property details so our team can follow up."
     }
   ];
 
@@ -41,17 +41,11 @@ const FAQSection: React.FC = () => {
       <div className="max-w-[1280px] mx-auto px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="flex justify-center mb-3">
-            <span className="font-space-mono text-xs text-[#D4755B] uppercase tracking-widest">
-              Help Center
-            </span>
-          </div>
           <h2 className="font-syne font-bold text-4xl text-[#221410] mb-4">
             Common Questions
           </h2>
           <p className="font-manrope text-lg text-[#4B5563] leading-relaxed max-w-[640px] mx-auto">
-            Find quick answers to your most pressing questions about buying, selling, and
-            partnering with BuildEstate.
+            Find quick answers about property services in Haridwar.
           </p>
         </div>
 
@@ -99,18 +93,6 @@ const FAQSection: React.FC = () => {
           ))}
         </div>
 
-        {/* View All Questions Link */}
-        <div className="text-center mt-12">
-          <a 
-            href="#" 
-            className="inline-flex items-center gap-2 font-manrope font-bold text-base text-[#D4755B] hover:text-[#C05621] transition-[color] group"
-          >
-            <span>Get Full Knowledge Base</span>
-            <span className="material-icons text-lg group-hover:translate-x-1 transition-transform">
-              arrow_forward
-            </span>
-          </a>
-        </div>
       </div>
     </section>
   );

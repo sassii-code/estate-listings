@@ -10,32 +10,17 @@ interface ContactMethod {
 }
 
 const OtherWaysSection: React.FC = () => {
-  const methods: ContactMethod[] = [
-    {
-      icon: 'chat',
-      title: 'WhatsApp Us',
-      description: 'Chat directly with our support team via WhatsApp for instant assistance.',
-      action: 'Start Chat',
-      actionLink: 'https://wa.me/919876543210',
-      bgColor: 'bg-[#E8F5E9]'
-    },
-    {
-      icon: 'chat_bubble',
-      title: 'Live Chat',
-      description: 'Connect with a property expert instantly through our live chat feature.',
-      action: 'Launch Chat',
-      actionLink: '#',
-      bgColor: 'bg-[#E3F2FD]'
-    },
-    {
-      icon: 'event',
-      title: 'Schedule a Call',
-      description: 'Book a convenient time for a detailed consultation with our specialists.',
-      action: 'Book Now',
-      actionLink: '#',
-      bgColor: 'bg-[#FFF3E0]'
-    }
-  ];
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER?.trim();
+  if (!whatsappNumber) return null;
+
+  const methods: ContactMethod[] = [{
+    icon: 'chat',
+    title: 'WhatsApp',
+    description: 'Message us about buying, selling, or renting property in Haridwar.',
+    action: 'Start a WhatsApp chat',
+    actionLink: `https://wa.me/${whatsappNumber.replace(/\D/g, '')}`,
+    bgColor: 'bg-[#E8F5E9]'
+  }];
 
   return (
     <section className="bg-[#F2EFE9] py-24">
@@ -46,12 +31,12 @@ const OtherWaysSection: React.FC = () => {
             Other Ways to Connect
           </h2>
           <p className="font-manrope text-lg text-[#4B5563] leading-relaxed max-w-[640px] mx-auto">
-            Need faster support? Try our instant messaging options.
+            Get in touch with us directly.
           </p>
         </div>
 
         {/* Methods Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mx-auto grid max-w-sm grid-cols-1 gap-8">
           {methods.map((method, index) => (
             <div 
               key={index}

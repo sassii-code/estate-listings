@@ -56,7 +56,7 @@ const PropertyDetailsPage: React.FC = () => {
     title: property ? `${property.title} - ${property.location}` : 'Property Details',
     description: property
       ? `${property.title} in ${property.locality || property.location}. ${property.type} property.`
-      : 'View property details on BuildEstate.',
+      : 'View property details from MAA DURGA PROPERTIES.',
     image: property?.image?.[0] || undefined,
     url: property ? `https://buildestate.vercel.app/property/${property._id}` : undefined,
     type: 'article',
@@ -135,8 +135,7 @@ const PropertyDetailsPage: React.FC = () => {
     );
   }
 
-  // Extract city from location string (e.g. "Satellite, Ahmedabad, Gujarat" → "Ahmedabad")
-  // Indian addresses typically end with state, so use second-to-last part as city
+  // Indian addresses typically end with state, so use the second-to-last part as the city.
   const cityParts = property.location.split(',').map(s => s.trim());
   const city = cityParts.length >= 3
     ? cityParts[cityParts.length - 2]       // "Area, City, State" → City
@@ -158,7 +157,7 @@ const PropertyDetailsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F4] pb-16 md:pb-0">
+    <div className="min-h-screen bg-[#EEF0EC] pb-36 lg:pb-0">
       {/* Property Structured Data for SEO */}
       <StructuredData
         type="property"
@@ -259,29 +258,11 @@ const PropertyDetailsPage: React.FC = () => {
         <PropertyEnquiryForm propertyId={property._id} propertyTitle={property.title} />
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-[#E6E0DA] bg-white/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(34,20,16,0.12)] backdrop-blur md:hidden">
-        {contactLinks.callHref && (
-          <a
-            href={contactLinks.callHref}
-            className="flex flex-1 items-center justify-center rounded-lg border border-[#D4755B] px-2 py-3 text-center font-manrope text-sm font-bold text-[#B86851]"
-          >
-            Call
-          </a>
-        )}
-        {contactLinks.whatsAppHref && (
-          <a
-            href={contactLinks.whatsAppHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center rounded-lg bg-[#25D366] px-2 py-3 text-center font-manrope text-sm font-bold text-white"
-          >
-            WhatsApp
-          </a>
-        )}
+      <div className="fixed inset-x-0 bottom-[76px] z-40 border-t border-[#D0D5D1] bg-white/95 p-3 shadow-[0_-8px_24px_rgba(46,58,63,0.12)] backdrop-blur lg:hidden">
         <button
           type="button"
           onClick={scrollToEnquiry}
-          className="flex-1 rounded-lg bg-[#D4755B] px-2 py-3 text-center font-manrope text-sm font-bold text-white"
+          className="w-full rounded-lg bg-[#F2A900] px-4 py-3 text-center font-bold text-[#2E3A3F]"
         >
           Request a call back
         </button>

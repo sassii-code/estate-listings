@@ -1,8 +1,8 @@
 <div align="center">
 
-# BuildEstate — Frontend 🌐
+# MAA DURGA PROPERTIES — Frontend 🌐
 
-_The user-facing website of BuildEstate — browse properties and book viewings._
+_The user-facing website for MAA DURGA PROPERTIES — browse property in Haridwar and book viewings._
 
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -19,7 +19,7 @@ _The user-facing website of BuildEstate — browse properties and book viewings.
 ## 📸 Preview
 
 <div align="center">
-  <img src="../Image/Home_page.png" alt="BuildEstate homepage" width="100%" />
+  <img src="../Image/Home_page.png" alt="MAA DURGA PROPERTIES homepage" width="100%" />
   <br/><br/>
 </div>
 

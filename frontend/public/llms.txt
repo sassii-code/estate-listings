@@ -1,35 +1,10 @@
-# BuildEstate — Real Estate Platform
+# MAA DURGA PROPERTIES
 
-> BuildEstate helps users browse residential and commercial properties across India and schedule property viewings.
+MAA DURGA PROPERTIES helps people buy, sell, and rent residential, commercial, and industrial property in Haridwar.
 
-## What BuildEstate Is
+## Website
 
-BuildEstate is a real estate platform serving homebuyers and renters across India. Visitors can browse available flats, villas, apartments, houses, commercial spaces, and plots, then schedule property viewings.
-
-## Core Features
-
-- **Property Browsing**: Search and view available properties across India.
-- **Appointment Booking**: Visitors can schedule property viewings through the platform.
-- **Admin Dashboard**: Staff manage listings, appointments, and platform activity.
-
-## Cities Covered
-
-Mumbai, Delhi NCR, Bangalore, Ahmedabad, Pune, Hyderabad, Chennai
-
-## Property Types
-
-Apartments (1BHK, 2BHK, 3BHK, 4BHK+), Villas, Independent Houses, Commercial Spaces, Plots
-
-## Technology
-
-- Frontend: React 18 + TypeScript + Vite (hosted on Vercel)
-- Backend: Node.js + Express + MongoDB (hosted on Render)
-- Property images: ImageKit CDN
-
-## Links
-
-- Website: https://buildestate.vercel.app
 - Properties: https://buildestate.vercel.app/properties
+- Sell or rent out: https://buildestate.vercel.app/sell-property
 - About: https://buildestate.vercel.app/about
 - Contact: https://buildestate.vercel.app/contact
-- Source code: https://github.com/AAYUSH412/Real-Estate-Website

@@ -17,13 +17,13 @@ const PropertyContactActions: React.FC<PropertyContactActionsProps> = ({
   if (!callHref && !whatsAppHref) return null;
 
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex gap-3 ${className}`}>
       {callHref && (
         <a
           href={callHref}
-          className="flex-1 rounded-lg border border-[#D4755B] px-3 py-2.5 text-center font-manrope text-sm font-bold text-[#B86851] transition-colors hover:bg-[#D4755B]/10"
+          className="flex min-h-12 flex-1 items-center justify-center rounded-lg bg-[#F2A900] px-3 py-3 text-center font-bold text-[#2E3A3F]"
         >
-          Call
+          Call now
         </a>
       )}
       {whatsAppHref && (
@@ -31,9 +31,9 @@ const PropertyContactActions: React.FC<PropertyContactActionsProps> = ({
           href={whatsAppHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 rounded-lg bg-[#25D366] px-3 py-2.5 text-center font-manrope text-sm font-bold text-white transition-colors hover:bg-[#1DA851]"
+          className="flex min-h-12 flex-1 items-center justify-center rounded-lg bg-[#0F5E5A] px-3 py-3 text-center font-bold text-white hover:bg-[#2E3A3F]"
         >
-          WhatsApp
+          WhatsApp us
         </a>
       )}
     </div>

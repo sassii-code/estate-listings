@@ -1,5 +1,5 @@
 import express from 'express';
-import { addproperty, listproperty, removeproperty, updateproperty,singleproperty } from '../controller/productController.js';
+import { addproperty, listproperty, homepageProperties, removeproperty, updateproperty,singleproperty } from '../controller/productController.js';
 import upload from '../middleware/multer.js';
 import { adminProtect } from '../middleware/authMiddleware.js';
 
@@ -13,6 +13,7 @@ propertyrouter.post('/add', adminProtect, upload.fields([
     { name: "image4", maxCount: 1 },
 ]), addproperty);
 propertyrouter.get('/list', listproperty);
+propertyrouter.get('/homepage', homepageProperties);
 propertyrouter.post('/remove', adminProtect, removeproperty);
 propertyrouter.post('/update', adminProtect, upload.fields([
     { name: "image1", maxCount: 1 },

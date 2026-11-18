@@ -65,6 +65,10 @@ const propertySchema = new mongoose.Schema(
       enum: PROPERTY_STATUSES,
       default: "Available",
     },
+    showOnHomepage: {
+      type: Boolean,
+      default: false,
+    },
     // Stored as plain URLs. Admin-panel listings use this directly.
     // User-submitted listings also store URLs here for full compatibility.
     image: {
@@ -151,6 +155,7 @@ propertySchema.index({ reviewStatus: 1 });
 propertySchema.index({ createdAt: -1 }); // Sorting by creation date
 propertySchema.index({ postedBy: 1 }); // User's own listings
 propertySchema.index({ reviewStatus: 1, createdAt: -1 }); // Review queue and public listing sort
+propertySchema.index({ reviewStatus: 1, showOnHomepage: -1, createdAt: -1 });
 propertySchema.index({ postedBy: 1, createdAt: -1 }); // Compound: user listings + sort
 propertySchema.index({ expiresAt: 1 }); // Expiry cleanup queries
 propertySchema.index({ location: "text", title: "text", description: "text" }); // Text search

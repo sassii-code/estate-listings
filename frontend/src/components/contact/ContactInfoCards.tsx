@@ -1,105 +1,69 @@
 import React from 'react';
 
 const ContactInfoCards: React.FC = () => {
+  const address = import.meta.env.VITE_BUSINESS_ADDRESS?.trim();
+  const phone = import.meta.env.VITE_BUSINESS_PHONE?.trim();
+  const email = import.meta.env.VITE_BUSINESS_EMAIL?.trim();
+
   return (
     <div className="space-y-6">
-      {/* Visit Our Office Card */}
-      <div className="bg-white border border-[#E6E0DA] rounded-xl p-6">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-[rgba(212,117,91,0.1)] rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="material-icons text-2xl text-[#D4755B]">
-              location_on
-            </span>
-          </div>
-          <div className="flex-1">
-            <h3 className="font-syne font-bold text-lg text-[#221410] mb-2">
-              Visit Our Office
-            </h3>
-            <p className="font-manrope font-extralight text-sm text-[#4B5563] leading-relaxed mb-3">
-              502, Devpath Building,<br />
-              Near Torrent Lab,<br />
-              Ashram Road, Ahmedabad
-            </p>
-            <a 
-              href="https://maps.google.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-manrope font-medium text-sm text-[#D4755B] hover:text-[#C05621] transition-[color]"
-            >
-              <span>Get Directions</span>
-              <span className="material-icons text-sm">
-                arrow_forward
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Call or Email Us Card */}
-      <div className="bg-white border border-[#E6E0DA] rounded-xl p-6">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-[rgba(212,117,91,0.1)] rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="material-icons text-2xl text-[#D4755B]">
-              phone
-            </span>
-          </div>
-          <div className="flex-1">
-            <h3 className="font-syne font-bold text-lg text-[#221410] mb-3">
-              Call or Email Us
-            </h3>
-            <div className="space-y-2">
-              <a 
-                href="tel:+919876543210" 
-                className="flex items-center gap-2 font-manrope font-extralight text-sm text-[#4B5563] hover:text-[#D4755B] transition-[color]"
+      {address && (
+        <div className="rounded-xl border border-[#E6E0DA] bg-white p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(212,117,91,0.1)]">
+              <span className="material-icons text-2xl text-[#D4755B]">location_on</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="mb-2 font-syne text-lg font-bold text-[#221410]">Business Address</h3>
+              <p className="mb-3 whitespace-pre-line font-manrope text-sm font-extralight leading-relaxed text-[#4B5563]">
+                {address}
+              </p>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-manrope text-sm font-medium text-[#D4755B] transition-[color] hover:text-[#C05621]"
               >
-                <span className="material-icons text-base">
-                  call
-                </span>
-                <span>+91 98765 43210</span>
-              </a>
-              <a 
-                href="mailto:hello@buildestate.com" 
-                className="flex items-center gap-2 font-manrope font-extralight text-sm text-[#4B5563] hover:text-[#D4755B] transition-[color]"
-              >
-                <span className="material-icons text-base">
-                  email
-                </span>
-                <span>hello@buildestate.com</span>
+                <span>Get Directions</span>
+                <span className="material-icons text-sm">arrow_forward</span>
               </a>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Business Hours Card */}
-      <div className="bg-white border border-[#E6E0DA] rounded-xl p-6">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-[rgba(212,117,91,0.1)] rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="material-icons text-2xl text-[#D4755B]">
-              schedule
-            </span>
-          </div>
-          <div className="flex-1">
-            <h3 className="font-syne font-bold text-lg text-[#221410] mb-3">
-              Business Hours
-            </h3>
-            <div className="space-y-2 font-manrope font-extralight text-sm text-[#4B5563]">
-              <div className="flex justify-between items-center">
-                <span>Mon - Fri:</span>
-                <span className="font-medium text-[#221410]">09:00 - 18:00</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>Saturday:</span>
-                <span className="font-medium text-[#221410]">10:00 - 16:00</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>Sunday:</span>
-                <span className="font-medium text-[#221410]">Closed</span>
+      {(phone || email) && (
+        <div className="rounded-xl border border-[#E6E0DA] bg-white p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(212,117,91,0.1)]">
+              <span className="material-icons text-2xl text-[#D4755B]">phone</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="mb-3 font-syne text-lg font-bold text-[#221410]">Call or Email Us</h3>
+              <div className="space-y-2">
+                {phone && (
+                  <a
+                    href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+                    className="flex items-center gap-2 font-manrope text-sm font-extralight text-[#4B5563] transition-[color] hover:text-[#D4755B]"
+                  >
+                    <span className="material-icons text-base">call</span>
+                    <span>{phone}</span>
+                  </a>
+                )}
+                {email && (
+                  <a
+                    href={`mailto:${email}`}
+                    className="flex items-center gap-2 font-manrope text-sm font-extralight text-[#4B5563] transition-[color] hover:text-[#D4755B]"
+                  >
+                    <span className="material-icons text-base">email</span>
+                    <span>{email}</span>
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

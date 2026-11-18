@@ -48,7 +48,7 @@ export function calculateAreaSqFt(area, areaUnit) {
   return Math.round(Number(area) * factor * 100) / 100;
 }
 
-export function parsePropertyFields(body) {
+export function parsePropertyFields(body, { allowShowOnHomepage = false } = {}) {
   const required = ["title", "description", "phone", "purpose", "category", "type", "locality", "status", "price", "area", "areaUnit"];
   const missing = required.filter((field) => !String(body[field] ?? "").trim());
   if (missing.length) {
@@ -90,6 +90,7 @@ export function parsePropertyFields(body) {
     bedrooms,
     reraNumber: String(body.reraNumber ?? "").trim(),
     status: body.status,
+    showOnHomepage: allowShowOnHomepage && (body.showOnHomepage === true || body.showOnHomepage === "true"),
     description: body.description.trim(),
     phone: body.phone.trim(),
     baths,

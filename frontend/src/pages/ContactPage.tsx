@@ -9,31 +9,30 @@ import ContactInfoCards from '../components/contact/ContactInfoCards';
 import ContactMapSection from '../components/contact/ContactMapSection';
 import FAQSection from '../components/contact/FAQSection';
 import OtherWaysSection from '../components/contact/OtherWaysSection';
-import NewsletterBanner from '../components/contact/NewsletterBanner';
 
 const FAQ_ITEMS = [
   {
-    question: 'How does the AI matching process work?',
-    answer: 'Our proprietary algorithm analyzes over 50 data points from your preferences and lifestyle inputs to suggest properties that align with your unique needs, often uncovering options you might have missed.',
+    question: 'What kinds of property can I ask about?',
+    answer: 'You can contact us about residential, commercial, and industrial property in Haridwar.',
   },
   {
-    question: 'What areas do you currently cover?',
-    answer: 'We currently cover major metropolitan areas including Ahmedabad, Mumbai, Delhi, Bangalore, and Pune. We\'re expanding to more cities across India and will update our coverage area regularly.',
+    question: 'Can you help me buy, sell, or rent a property?',
+    answer: 'Yes. Get in touch and tell us what you are looking for or what you would like to list.',
   },
   {
-    question: 'Can I list my property exclusively with BuildEstate?',
-    answer: 'Yes, we offer exclusive listing agreements with premium marketing benefits including professional photography, virtual tours, AI-powered listing optimization, and dedicated property consultant support throughout the selling process.',
+    question: 'How do I arrange a property visit?',
+    answer: 'Contact us with the property you are interested in and we can discuss a suitable time.',
   },
   {
-    question: 'How do I schedule a virtual tour?',
-    answer: 'You can schedule a virtual tour directly from any property listing page by clicking the \'Schedule Virtual Tour\' button. Choose your preferred date and time, and our team will send you a confirmation with the video conference link.',
+    question: 'How do I share a property for sale or rent?',
+    answer: 'Use the Sell or Rent Out form and provide the property details so our team can follow up.',
   },
 ];
 
 const ContactPage: React.FC = () => {
   useSEO({
     title: 'Contact Us',
-    description: 'Get in touch with BuildEstate. We\'re here to help you find your dream property.',
+    description: 'Contact MAA DURGA PROPERTIES about buying, selling, or renting property in Haridwar.',
     url: 'https://buildestate.vercel.app/contact',
   });
 
@@ -72,9 +71,6 @@ const ContactPage: React.FC = () => {
 
       {/* Other Ways to Connect */}
       <OtherWaysSection />
-
-      {/* Newsletter Banner */}
-      <NewsletterBanner />
 
       {/* Footer */}
       <Footer />

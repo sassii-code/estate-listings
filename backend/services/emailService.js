@@ -24,7 +24,7 @@ import {
 
 class EmailService {
   constructor() {
-    this.fromAddress = process.env.EMAIL_USER || 'noreply@buildestate.com';
+    this.fromAddress = process.env.EMAIL_USER;
   }
 
   /**
@@ -32,6 +32,10 @@ class EmailService {
    */
   async sendEmail(to, subject, htmlContent, options = {}) {
     try {
+      if (!this.fromAddress) {
+        throw new Error('EMAIL_USER is not configured');
+      }
+
       const mailOptions = {
         from: this.fromAddress,
         to,
@@ -75,7 +79,7 @@ class EmailService {
    * Send welcome email to new users
    */
   async sendWelcomeEmail(userEmail, userName) {
-    const subject = 'Welcome to BuildEstate - Your Account is Ready!';
+    const subject = 'Welcome to MAA DURGA PROPERTIES - Your Account is Ready!';
     const htmlContent = getWelcomeTemplate(userName);
 
     return await this.sendEmail(userEmail, subject, htmlContent);
@@ -85,7 +89,7 @@ class EmailService {
    * Send email verification link to new users
    */
   async sendEmailVerification(userEmail, userName, verificationUrl) {
-    const subject = 'Verify Your BuildEstate Email Address';
+    const subject = 'Verify Your MAA DURGA PROPERTIES Email Address';
     const htmlContent = getEmailVerificationTemplate(userName, verificationUrl);
 
     return await this.sendEmail(userEmail, subject, htmlContent);
@@ -95,7 +99,7 @@ class EmailService {
    * Send password reset email
    */
   async sendPasswordResetEmail(userEmail, resetUrl) {
-    const subject = 'Reset Your BuildEstate Password';
+    const subject = 'Reset Your MAA DURGA PROPERTIES Password';
     const htmlContent = getPasswordResetTemplate(resetUrl);
 
     return await this.sendEmail(userEmail, subject, htmlContent);
@@ -105,7 +109,7 @@ class EmailService {
    * Send newsletter subscription confirmation email
    */
   async sendNewsletterWelcome(userEmail) {
-    const subject = 'Welcome to BuildEstate Newsletter';
+    const subject = 'Welcome to MAA DURGA PROPERTIES Newsletter';
     const siteUrl = process.env.WEBSITE_URL || 'https://buildestate.vercel.app';
     const unsubscribeUrl = `${siteUrl}/unsubscribe?email=${encodeURIComponent(userEmail)}`;
     const htmlContent = getNewsletterTemplate(userEmail, unsubscribeUrl);
@@ -141,14 +145,18 @@ class EmailService {
     const htmlContent = `
       <h2>New Appointment Request</h2>
       <p><strong>Property:</strong> ${appointment.propertyId.title}</p>
-      <p><strong>User:</strong> ${userDetails.name} (${userDetails.email})</p>
+      <p><strong>User:</strong> ${userDetails.name}${userDetails.email ? ` (${userDetails.email})` : ''}</p>
       <p><strong>Phone:</strong> ${userDetails.phone}</p>
       <p><strong>Date:</strong> ${new Date(appointment.date).toLocaleDateString()}</p>
       <p><strong>Time:</strong> ${appointment.time}</p>
       ${appointment.notes ? `<p><strong>Notes:</strong> ${appointment.notes}</p>` : ''}
     `;
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@buildestate.com';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (!adminEmail) {
+      throw new Error('ADMIN_EMAIL is not configured');
+    }
+
     return await this.sendEmail(adminEmail, subject, htmlContent);
   }
 
@@ -200,7 +208,7 @@ class EmailService {
    * Send user suspended notification email
    */
   async sendUserSuspended(userEmail, userName, days, reason, suspendedUntil) {
-    const subject = `BuildEstate Account Suspended - ${days} Day${days > 1 ? 's' : ''}`;
+    const subject = `MAA DURGA PROPERTIES Account Suspended - ${days} Day${days > 1 ? 's' : ''}`;
     const htmlContent = getUserSuspendedTemplate(userName, days, reason, suspendedUntil);
 
     return await this.sendEmail(userEmail, subject, htmlContent);
@@ -210,7 +218,7 @@ class EmailService {
    * Send user banned notification email
    */
   async sendUserBanned(userEmail, userName, reason) {
-    const subject = 'BuildEstate Account Permanently Banned';
+    const subject = 'MAA DURGA PROPERTIES Account Permanently Banned';
     const htmlContent = getUserBannedTemplate(userName, reason);
 
     return await this.sendEmail(userEmail, subject, htmlContent);
@@ -220,7 +228,7 @@ class EmailService {
    * Send user reactivated notification email
    */
   async sendUserReactivated(userEmail, userName) {
-    const subject = 'BuildEstate Account Reactivated - Welcome Back!';
+    const subject = 'MAA DURGA PROPERTIES Account Reactivated - Welcome Back!';
     const htmlContent = getUserReactivatedTemplate(userName);
 
     return await this.sendEmail(userEmail, subject, htmlContent);

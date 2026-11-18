@@ -5,7 +5,7 @@ import { parsePropertyFields } from "../utils/propertyFields.js";
 
 const addproperty = async (req, res) => {
     try {
-        const fields = parsePropertyFields(req.body);
+        const fields = parsePropertyFields(req.body, { allowShowOnHomepage: true });
 
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -89,6 +89,36 @@ const listproperty = async (req, res) => {
     }
 };
 
+const homepageProperties = async (req, res) => {
+    try {
+        const activeListings = {
+            $and: [
+                {
+                    $or: [
+                        { reviewStatus: "active" },
+                        { reviewStatus: { $exists: false }, status: "active" },
+                        { reviewStatus: { $exists: false }, status: { $exists: false } },
+                    ],
+                },
+                {
+                    $or: [
+                        { status: { $exists: false } },
+                        { status: { $nin: ["Sold", "Rented"] } },
+                    ],
+                },
+            ],
+        };
+        const property = await Property.find(activeListings)
+            .sort({ showOnHomepage: -1, createdAt: -1, _id: -1 })
+            .limit(10);
+
+        res.json({ property, success: true });
+    } catch (error) {
+        console.log("Error fetching homepage properties: ", error);
+        res.status(500).json({ message: "Server Error", success: false });
+    }
+};
+
 const removeproperty = async (req, res) => {
     try {
         const property = await Property.findByIdAndDelete(req.body.id);
@@ -105,7 +135,7 @@ const removeproperty = async (req, res) => {
 const updateproperty = async (req, res) => {
     try {
         const { id } = req.body;
-        const fields = parsePropertyFields(req.body);
+        const fields = parsePropertyFields(req.body, { allowShowOnHomepage: true });
 
         const property = await Property.findById(id);
         if (!property) {
@@ -165,4 +195,4 @@ const singleproperty = async (req, res) => {
     }
 };
 
-export { addproperty, listproperty, removeproperty, updateproperty , singleproperty};
+export { addproperty, listproperty, homepageProperties, removeproperty, updateproperty , singleproperty};

@@ -2,6 +2,10 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 const SITE_URL = 'https://buildestate.vercel.app';
+const BUSINESS_NAME = 'MAA DURGA PROPERTIES';
+const BUSINESS_ADDRESS = import.meta.env.VITE_BUSINESS_ADDRESS?.trim();
+const BUSINESS_PHONE = import.meta.env.VITE_BUSINESS_PHONE?.trim();
+const BUSINESS_EMAIL = import.meta.env.VITE_BUSINESS_EMAIL?.trim();
 
 interface StructuredDataProps {
   type: 'website' | 'organization' | 'property' | 'localBusiness' | 'breadcrumb' | 'faqPage' | 'howTo' | 'speakable';
@@ -30,7 +34,7 @@ interface StructuredDataProps {
   };
 }
 
-const AREA_SERVED = ['Ahmedabad', 'Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai'];
+const AREA_SERVED = ['Haridwar'];
 
 const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
   const location = useLocation();
@@ -41,9 +45,9 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       '@id': `${SITE_URL}/#website`,
-      name: 'BuildEstate',
+      name: BUSINESS_NAME,
       url: SITE_URL,
-      description: 'Real estate platform for finding your perfect property in India.',
+      description: 'Residential, commercial, and industrial property services in Haridwar.',
       potentialAction: {
         '@type': 'SearchAction',
         target: `${SITE_URL}/properties?q={search_term_string}`,
@@ -55,18 +59,15 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       '@id': `${SITE_URL}/#organization`,
-      name: 'BuildEstate',
+      name: BUSINESS_NAME,
       url: SITE_URL,
-      logo: `${SITE_URL}/logo.png`,
       areaServed: AREA_SERVED,
-      sameAs: [
-        'https://github.com/AAYUSH412/Real-Estate-Website',
-        'https://linkedin.com/in/AAYUSH412',
-      ],
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'customer service',
         availableLanguage: ['English', 'Hindi'],
+        ...(BUSINESS_PHONE && { telephone: BUSINESS_PHONE }),
+        ...(BUSINESS_EMAIL && { email: BUSINESS_EMAIL }),
       },
     },
 
@@ -74,21 +75,18 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
       '@id': `${SITE_URL}/#localbusiness`,
-      name: 'BuildEstate',
-      description: 'Real estate platform for finding properties in India.',
+      name: BUSINESS_NAME,
+      description: 'Residential, commercial, and industrial property services in Haridwar.',
       url: SITE_URL,
-      logo: `${SITE_URL}/logo.png`,
-      image: `${SITE_URL}/og-image.png`,
       areaServed: AREA_SERVED.map((city) => ({ '@type': 'City', name: city })),
-      priceRange: '₹₹₹',
       address: {
         '@type': 'PostalAddress',
+        ...(BUSINESS_ADDRESS && { streetAddress: BUSINESS_ADDRESS }),
+        addressLocality: 'Haridwar',
         addressCountry: 'IN',
       },
-      sameAs: [
-        'https://github.com/AAYUSH412/Real-Estate-Website',
-        'https://linkedin.com/in/AAYUSH412',
-      ],
+      ...(BUSINESS_PHONE && { telephone: BUSINESS_PHONE }),
+      ...(BUSINESS_EMAIL && { email: BUSINESS_EMAIL }),
     },
 
     property: {
@@ -98,7 +96,7 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
       description: data?.description || 'Property details',
       url: currentUrl,
       datePosted: data?.createdAt || new Date().toISOString(),
-      image: data?.image || `${SITE_URL}/og-image.png`,
+      ...(data?.image && { image: data.image }),
       address: {
         '@type': 'PostalAddress',
         addressLocality: data?.location || 'City',
@@ -147,7 +145,7 @@ const StructuredData: React.FC<StructuredDataProps> = ({ type, data }) => {
     howTo: {
       '@context': 'https://schema.org',
       '@type': 'HowTo',
-      name: data?.howToName || 'How to Buy Property with BuildEstate',
+      name: data?.howToName || 'How to Buy Property',
       description: data?.howToDescription || 'Steps to find and buy your perfect home in India.',
       step: (data?.steps || []).map((step) => ({
         '@type': 'HowToStep',

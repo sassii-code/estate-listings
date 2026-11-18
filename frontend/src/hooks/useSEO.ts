@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 
 const SITE_URL = 'https://buildestate.vercel.app';
-const DEFAULT_TITLE = 'BuildEstate - AI-Powered Luxury Real Estate | Find Your Dream Home';
-const DEFAULT_DESCRIPTION = 'Find your perfect property with AI-powered insights, market analysis, and personalized recommendations across India.';
-const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
+const BRAND_NAME = 'MAA DURGA PROPERTIES';
+const DEFAULT_TITLE = `${BRAND_NAME} | Property in Haridwar`;
+const DEFAULT_DESCRIPTION = 'Buy, sell, or rent residential, commercial, and industrial property in Haridwar with MAA DURGA PROPERTIES.';
 
 interface SEOProps {
   title?: string;
   description?: string;
-  /** Absolute URL to the OG/Twitter card image. Defaults to /og-image.png */
+  /** Absolute URL to the OG/Twitter card image, if available */
   image?: string;
   /** Canonical URL. Defaults to current window.location.href */
   url?: string;
@@ -45,9 +45,8 @@ function setCanonical(url: string) {
 
 export function useSEO({ title, description, image, url, type = 'website' }: SEOProps) {
   useEffect(() => {
-    const fullTitle = title ? `${title} | BuildEstate` : DEFAULT_TITLE;
+    const fullTitle = title ? `${title} | ${BRAND_NAME}` : DEFAULT_TITLE;
     const desc = description || DEFAULT_DESCRIPTION;
-    const ogImage = image || DEFAULT_IMAGE;
     const canonical = url || window.location.href;
 
     // <title>
@@ -59,14 +58,22 @@ export function useSEO({ title, description, image, url, type = 'website' }: SEO
     // Open Graph
     setOG('og:title', fullTitle);
     setOG('og:description', desc);
-    setOG('og:image', ogImage);
+    if (image) {
+      setOG('og:image', image);
+    } else {
+      document.querySelector('meta[property="og:image"]')?.remove();
+    }
     setOG('og:url', canonical);
     setOG('og:type', type);
 
     // Twitter Card
     setTwitter('twitter:title', fullTitle);
     setTwitter('twitter:description', desc);
-    setTwitter('twitter:image', ogImage);
+    if (image) {
+      setTwitter('twitter:image', image);
+    } else {
+      document.querySelector('meta[name="twitter:image"]')?.remove();
+    }
 
     // Canonical URL
     setCanonical(canonical);
@@ -74,14 +81,14 @@ export function useSEO({ title, description, image, url, type = 'website' }: SEO
     return () => {
       document.title = DEFAULT_TITLE;
       setMeta('meta[name="description"]', 'name', 'description', DEFAULT_DESCRIPTION);
-      setOG('og:title', 'BuildEstate - AI-Powered Luxury Real Estate');
+      setOG('og:title', DEFAULT_TITLE);
       setOG('og:description', DEFAULT_DESCRIPTION);
-      setOG('og:image', DEFAULT_IMAGE);
+      document.querySelector('meta[property="og:image"]')?.remove();
       setOG('og:url', SITE_URL);
       setOG('og:type', 'website');
-      setTwitter('twitter:title', 'BuildEstate - AI-Powered Luxury Real Estate');
+      setTwitter('twitter:title', DEFAULT_TITLE);
       setTwitter('twitter:description', DEFAULT_DESCRIPTION);
-      setTwitter('twitter:image', DEFAULT_IMAGE);
+      document.querySelector('meta[name="twitter:image"]')?.remove();
       setCanonical(SITE_URL);
     };
   }, [title, description, image, url, type]);

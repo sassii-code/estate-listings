@@ -9,16 +9,13 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Newsletter
-export const newsAPI = {
-  subscribe: (email: string) =>
-    apiClient.post('/news/newsdata', { email }),
-};
-
 // Properties (CRUD — admin-managed listings)
 export const propertiesAPI = {
   getAll: () =>
     apiClient.get('/products/list'),
+
+  getHomepage: () =>
+    apiClient.get('/products/homepage'),
 
   getById: (id: string) =>
     apiClient.get(`/products/single/${id}`),
@@ -31,7 +28,7 @@ export const appointmentsAPI = {
     date: string;
     time: string;
     name: string;
-    email: string;
+    email?: string;
     phone: string;
     message?: string;
   }) =>
@@ -61,7 +58,7 @@ export const enquiriesAPI = {
 
 // Contact Form
 export const contactAPI = {
-  submit: (data: { name: string; email: string; phone: string; message: string }) =>
+  submit: (data: { name: string; email?: string; phone: string; message: string }) =>
     apiClient.post('/forms/submit', data),
 };
 

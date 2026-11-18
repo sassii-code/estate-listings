@@ -11,10 +11,11 @@ export function formatArea(data: AreaData): string {
 
   if (Number.isFinite(area) && area > 0 && data.areaUnit) {
     const formattedArea = area.toLocaleString('en-IN');
-    if (data.areaUnit === 'sq ft' || equivalent == null) {
-      return `${formattedArea} ${data.areaUnit}`;
+    const unit = data.areaUnit === 'sq yd/gaj' ? 'gaj' : data.areaUnit;
+    if (unit === 'sq ft' || equivalent == null) {
+      return `${formattedArea} ${unit}`;
     }
-    return `${formattedArea} ${data.areaUnit} (${equivalent.toLocaleString('en-IN')} sq ft)`;
+    return `${formattedArea} ${unit} (${equivalent.toLocaleString('en-IN')} sq ft)`;
   }
 
   return equivalent == null ? '' : `${equivalent.toLocaleString('en-IN')} sq ft`;

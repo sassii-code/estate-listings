@@ -19,7 +19,7 @@ export const submitForm = async (req, res) => {
         <h2 style="font-family:sans-serif;">New Contact Form Submission</h2>
         <table style="font-family:sans-serif;border-collapse:collapse;">
           <tr><td style="padding:6px 12px;color:#6B7280;">Name</td><td style="padding:6px 12px;font-weight:600;">${escHtml(name)}</td></tr>
-          <tr><td style="padding:6px 12px;color:#6B7280;">Email</td><td style="padding:6px 12px;font-weight:600;">${escHtml(email)}</td></tr>
+          ${email ? `<tr><td style="padding:6px 12px;color:#6B7280;">Email</td><td style="padding:6px 12px;font-weight:600;">${escHtml(email)}</td></tr>` : ''}
           <tr><td style="padding:6px 12px;color:#6B7280;">Phone</td><td style="padding:6px 12px;font-weight:600;">${escHtml(phone || '—')}</td></tr>
           <tr><td style="padding:6px 12px;color:#6B7280;vertical-align:top;">Message</td><td style="padding:6px 12px;">${escHtml(message)}</td></tr>
         </table>

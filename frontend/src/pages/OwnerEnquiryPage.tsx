@@ -26,7 +26,7 @@ const OwnerEnquiryPage: React.FC = () => {
 
   useSEO({
     title: 'Sell or Rent Out Your Property',
-    description: 'Share your property details with BuildEstate and our team will call to discuss selling or renting it out.',
+    description: 'Share your property details with MAA DURGA PROPERTIES to discuss selling or renting it out in Haridwar.',
     url: 'https://buildestate.vercel.app/sell-property',
   });
 
@@ -69,7 +69,6 @@ const OwnerEnquiryPage: React.FC = () => {
       <Navbar />
       <main className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
         <div className="mb-8 text-center">
-          <p className="mb-2 font-manrope text-sm font-semibold uppercase tracking-wider text-[#D4755B]">For property owners</p>
           <h1 className="font-fraunces text-3xl font-semibold text-[#221410] sm:text-4xl">Sell or rent out your property</h1>
           <p className="mx-auto mt-3 max-w-xl font-manrope text-sm leading-6 text-[#6B7280]">
             Share a few details and our team will call you to discuss your property.
@@ -179,7 +178,7 @@ const OwnerEnquiryPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-lg bg-[#D4755B] px-4 py-3 font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg bg-[#F2A900] px-4 py-3 font-bold text-[#2E3A3F] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? 'Sending…' : 'Send my property details'}
               </button>

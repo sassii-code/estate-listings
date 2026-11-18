@@ -12,7 +12,6 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
   const { search } = useLocation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [question, setQuestion] = useState(`I'm interested in ${propertyTitle}`);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +28,6 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
       await enquiriesAPI.submit({
         name: name.trim(),
         phone,
-        email: email.trim() || undefined,
         type: 'Buyer',
         question: question.trim(),
         propertyId,
@@ -104,20 +102,6 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
               />
             </div>
             <div>
-              <label htmlFor="enquiry-email" className="mb-1.5 block font-manrope text-sm font-medium text-[#374151]">
-                Email <span className="font-normal text-[#6B7280]">(optional)</span>
-              </label>
-              <input
-                id="enquiry-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="w-full rounded-lg border border-[#D4C4BC] px-4 py-3 font-manrope text-sm focus:border-[#D4755B] focus:outline-none"
-              />
-            </div>
-            <div>
               <label htmlFor="enquiry-question" className="mb-1.5 block font-manrope text-sm font-medium text-[#374151]">
                 Your question
               </label>
@@ -135,7 +119,7 @@ const PropertyEnquiryForm: React.FC<PropertyEnquiryFormProps> = ({ propertyId, p
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-lg bg-[#D4755B] px-4 py-3 font-manrope text-sm font-bold text-white transition-colors hover:bg-[#B86851] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg bg-[#F2A900] px-4 py-3 font-bold text-[#2E3A3F] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting ? 'Sending…' : 'Request a call back'}
             </button>

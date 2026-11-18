@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 
 export interface FilterState {
   purpose?: string;
@@ -38,7 +38,7 @@ const FilterControls: React.FC<FilterBarProps & { onDone?: () => void }> = ({
     onDone?.();
   };
   const inputClass = 'w-full rounded-lg border border-[#E6E0DA] bg-white px-3 py-2.5 text-sm text-[#221410] focus:border-[#D4755B] focus:outline-none focus:ring-2 focus:ring-[#D4755B]/15';
-  const labelClass = 'mb-1.5 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]';
+  const labelClass = 'mb-1.5 block text-base font-semibold text-[#2E3A3F]';
 
   return (
     <div className="space-y-5">
@@ -171,12 +171,18 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
       <div className="lg:hidden">
         <button
           type="button"
-          onClick={() => setMobileOpen(true)}
+          onClick={() => setMobileOpen(open => !open)}
           className="flex w-full items-center justify-between rounded-xl border border-[#E6E0DA] bg-white px-4 py-3 font-manrope text-sm font-semibold text-[#221410]"
+          aria-expanded={mobileOpen}
         >
           <span className="flex items-center gap-2"><SlidersHorizontal className="h-4 w-4" /> Filters</span>
           <span className="text-[#6B7280]">{activeCount ? `${activeCount} applied` : 'Any property'}</span>
         </button>
+        {mobileOpen && (
+          <div className="mt-4 rounded-xl border border-[#D0D5D1] bg-white p-5">
+            {appliedFilters}
+          </div>
+        )}
       </div>
 
       <aside className="hidden rounded-2xl border border-[#E6E0DA] bg-white p-5 lg:block">
@@ -186,30 +192,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
         {appliedFilters}
       </aside>
 
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/50 lg:hidden" onClick={() => setMobileOpen(false)}>
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mobile-property-filters-title"
-            className="max-h-[88vh] w-full overflow-y-auto rounded-t-3xl bg-[#FAF8F4] px-5 pb-8 pt-5"
-            onClick={event => event.stopPropagation()}
-          >
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[#D4C4BC]" />
-            <div className="mb-5 flex items-center justify-between">
-              <h2 id="mobile-property-filters-title" className="font-fraunces text-xl font-semibold text-[#221410]">Filters</h2>
-              <button type="button" aria-label="Close filters" onClick={() => setMobileOpen(false)} className="rounded-full p-2 text-[#6B7280] hover:bg-white">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <FilterControls
-              filters={filters}
-              onFilterChange={onFilterChange}
-              onDone={() => setMobileOpen(false)}
-            />
-          </section>
-        </div>
-      )}
     </>
   );
 };

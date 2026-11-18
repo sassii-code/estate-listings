@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import PageTransition from './components/common/PageTransition';
 import ScrollToTop from './components/common/ScrollToTop';
 import StructuredData from './components/common/StructuredData';
+import GlobalContactBar from './components/common/GlobalContactBar';
+import Navbar from './components/common/Navbar';
 
 // Lazy load pages for better performance (Code Splitting)
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -16,27 +17,31 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 function NotFoundPage() {
   return (
-    <PageTransition className="min-h-screen flex flex-col items-center justify-center bg-[#FAF8F4]">
-      <h1 className="font-fraunces text-6xl font-bold text-[#D4755B] mb-4">404</h1>
-      <p className="font-manrope text-xl text-[#374151] mb-8">Page not found</p>
-      <a href="/" className="bg-[#D4755B] text-white font-manrope font-bold px-8 py-3 rounded-lg hover:bg-[#B86851] transition-all">
+    <PageTransition className="min-h-screen bg-[#EEF0EC]">
+      <Navbar />
+      <main className="flex min-h-[70vh] flex-col items-center justify-center">
+      <h1 className="mb-4 text-6xl font-bold text-[#0F5E5A]">404</h1>
+      <p className="mb-8 text-xl text-[#2E3A3F]">Page not found</p>
+      <a href="/" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#0F5E5A] px-8 py-3 font-bold text-white">
         Go Home
       </a>
+      </main>
     </PageTransition>
   );
 }
 
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FAF8F4]">
-      <div className="w-12 h-12 border-4 border-[#D4755B] border-t-transparent rounded-full animate-spin"></div>
+    <div className="min-h-screen bg-[#EEF0EC]">
+      <Navbar />
+      <div role="status" className="flex min-h-[60vh] items-center justify-center text-lg text-[#2E3A3F]">
+        Loading page…
+      </div>
     </div>
   );
 }
 
 function AnimatedRoutes() {
-  const location = useLocation();
-
   return (
     <>
       {/* Global structured data */}
@@ -44,17 +49,15 @@ function AnimatedRoutes() {
       <StructuredData type="organization" />
       <StructuredData type="localBusiness" />
 
-      <AnimatePresence mode="wait" initial={false}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-          <Route path="/properties" element={<PageTransition><PropertiesPage /></PageTransition>} />
-          <Route path="/property/:id" element={<PageTransition><PropertyDetailsPage /></PageTransition>} />
-          <Route path="/sell-property" element={<PageTransition><OwnerEnquiryPage /></PageTransition>} />
-          <Route path="/about" element={<PageTransition><AboutUsPage /></PageTransition>} />
-          <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </AnimatePresence>
+      <Routes>
+        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/properties" element={<PageTransition><PropertiesPage /></PageTransition>} />
+        <Route path="/property/:id" element={<PageTransition><PropertyDetailsPage /></PageTransition>} />
+        <Route path="/sell-property" element={<PageTransition><OwnerEnquiryPage /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><AboutUsPage /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </>
   );
 }
@@ -66,6 +69,7 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <AnimatedRoutes />
       </Suspense>
+      <GlobalContactBar />
       <Toaster position="top-center" richColors />
     </BrowserRouter>
   );

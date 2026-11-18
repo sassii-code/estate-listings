@@ -18,7 +18,7 @@ const createTransporter = () => {
 
       try {
         const payload = {
-          sender: { name: 'BuildEstate', email: mailOptions.from },
+          sender: { name: 'MAA DURGA PROPERTIES', email: mailOptions.from },
           to: [{ email: mailOptions.to }],
           subject: mailOptions.subject,
           htmlContent: mailOptions.html

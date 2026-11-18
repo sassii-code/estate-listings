@@ -8,7 +8,7 @@ const __dirname = path.resolve();
 
 // Startup banner — matches the backend's terminal art
 const banner = (mode: string, env: Record<string, string>): Plugin => ({
-  name: 'buildestate-banner',
+  name: 'maa-durga-properties-banner',
   apply: 'serve',
   configureServer(server) {
     server.httpServer?.once('listening', () => {
@@ -19,7 +19,7 @@ const banner = (mode: string, env: Record<string, string>): Plugin => ({
         console.log([
           '',
           '╔══════════════════════════════════════════════╗',
-          '║         BuildEstate Frontend  v1.0.0         ║',
+          '║    MAA DURGA PROPERTIES Frontend  v1.0.0     ║',
           '╚══════════════════════════════════════════════╝',
           '',
           `  ◆ Environment       ${mode}`,

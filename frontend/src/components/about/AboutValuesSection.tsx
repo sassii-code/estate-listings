@@ -5,18 +5,18 @@ const AboutValuesSection: React.FC = () => {
   const values = [
     {
       icon: Lightbulb,
-      title: 'Innovation',
-      description: 'We challenge the status quo of real estate, blending traditional service with cutting-edge technology to redefine what\'s possible.'
+      title: 'Local knowledge',
+      description: 'We focus on property in Haridwar and the needs of the people who live and work here.'
     },
     {
       icon: Eye,
-      title: 'Transparency',
-      description: 'No hidden data, no obscured histories. We believe in complete clarity, empowering you to make decisions with absolute confidence.'
+      title: 'Clear communication',
+      description: 'We aim to make the details of each property and the next steps easy to understand.'
     },
     {
       icon: Award,
-      title: 'Excellence',
-      description: 'From the first search to the final signature, we curate an experience of uncompromising quality and refined elegance.'
+      title: 'Practical support',
+      description: 'We help buyers, sellers, and renters explore property options and arrange the next steps.'
     }
   ];
 
@@ -25,9 +25,6 @@ const AboutValuesSection: React.FC = () => {
       <div className="max-w-[1280px] mx-auto px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="font-space-mono text-xs text-[#D4755B] uppercase tracking-[1.2px] mb-4">
-            Our Ethos
-          </div>
           <h2 className="font-syne text-4xl text-[#221410]">
             Driven by Purpose
           </h2>

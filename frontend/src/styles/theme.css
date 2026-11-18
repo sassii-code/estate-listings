@@ -1,21 +1,24 @@
 @custom-variant dark (&:is(.dark *));
 
-/* BuildEstate Luxury Design System */
+/* MAA DURGA PROPERTIES design system */
 :root {
-  /* Luxury Color Palette */
-  --canvas-cream: #FAF8F4;
-  --pearl-white: #FFFFFF;
-  --terracotta-clay: #D4755B;
-  --terracotta-primary: #EC4613; /* Figma uses this brighter version */
-  --charcoal-ink: #1C1B1A;
-  --slate-gray: #5A5856;
-  --warm-linen: #F5F1E8;
-  --warm-sand: #E6D5C3;
-  
-  /* Extended palette from Figma */
-  --warm-bg-1: #F8F6F6;
-  --warm-bg-2: #F9F7F2;
-  --warm-bg-3: #F0EBE5;
+  --ganga-teal: #0F5E5A;
+  --shivalik-slate: #2E3A3F;
+  --ghat-stone: #EEF0EC;
+  --marigold: #F2A900;
+  --white: #FFFFFF;
+
+  --canvas-cream: var(--ghat-stone);
+  --pearl-white: var(--white);
+  --terracotta-clay: var(--ganga-teal);
+  --terracotta-primary: var(--ganga-teal);
+  --charcoal-ink: var(--shivalik-slate);
+  --slate-gray: var(--shivalik-slate);
+  --warm-linen: var(--ghat-stone);
+  --warm-sand: #D0D5D1;
+  --warm-bg-1: var(--ghat-stone);
+  --warm-bg-2: var(--ghat-stone);
+  --warm-bg-3: var(--ghat-stone);
   
   /* Neutral colors from Figma */
   --gray-50: #f9fafb;
@@ -30,15 +33,16 @@
   --gray-900: #111827;
   
   /* Font families */
-  --font-fraunces: 'Fraunces', serif;
-  --font-syne: 'Syne', sans-serif;
-  --font-red-hat: 'Red Hat Display', sans-serif;
-  --font-space-mono: 'Space Mono', monospace;
-  --font-manrope: 'Manrope', sans-serif;
+  --font-anek: 'Anek Latin', 'Anek Devanagari', sans-serif;
+  --font-fraunces: var(--font-anek);
+  --font-syne: var(--font-anek);
+  --font-red-hat: var(--font-anek);
+  --font-space-mono: var(--font-anek);
+  --font-manrope: var(--font-anek);
   --font-material-icons: 'Material Icons', sans-serif;
   
   /* Design tokens for Tailwind */
-  --font-size: 16px;
+  --font-size: 18px;
   --background: var(--canvas-cream);
   --foreground: var(--charcoal-ink);
   --card: var(--pearl-white);
@@ -169,11 +173,12 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-red-hat);
+    font-family: var(--font-anek);
+    color: var(--shivalik-slate);
   }
 
   /**
-  * BuildEstate Typography System
+  * Typography System
   * Headings use Fraunces (elegant serif)
   * Subheadings use Syne (geometric sans)
   * Body text uses Red Hat Display (humanist sans)
@@ -186,64 +191,56 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1 {
-    font-family: var(--font-fraunces);
-    font-size: 3.5rem;
-    font-weight: var(--font-weight-normal);
-    line-height: 1.2;
-    color: var(--charcoal-ink);
+  h1, h2, h3, h4 {
+    font-family: var(--font-anek);
+    color: var(--shivalik-slate);
     text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.12;
   }
 
   h2 {
-    font-family: var(--font-fraunces);
-    font-size: 3rem;
-    font-weight: var(--font-weight-normal);
+    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.2;
-    color: var(--charcoal-ink);
-    text-wrap: balance;
   }
 
   h3 {
-    font-family: var(--font-syne);
     font-size: 1.5rem;
-    font-weight: var(--font-weight-bold);
     line-height: 1.3;
-    color: var(--charcoal-ink);
-    text-wrap: balance;
   }
 
   h4 {
-    font-family: var(--font-syne);
     font-size: 1.25rem;
-    font-weight: var(--font-weight-semibold);
     line-height: 1.4;
-    color: var(--charcoal-ink);
   }
 
   label {
-    font-family: var(--font-red-hat);
-    font-size: var(--text-base);
+    font-family: var(--font-anek);
+    font-size: 1rem;
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   button {
-    font-family: var(--font-manrope);
-    font-size: var(--text-base);
+    font-family: var(--font-anek);
+    font-size: 1rem;
     font-weight: var(--font-weight-bold);
     line-height: 1.5;
+    min-height: 48px;
   }
 
   :focus-visible {
-    outline: 2px solid var(--terracotta-clay);
+    outline: 3px solid var(--ganga-teal);
     outline-offset: 3px;
     border-radius: 4px;
   }
 
   input, textarea {
-    font-family: var(--font-red-hat);
-    font-size: var(--text-base);
+    font-family: var(--font-anek);
+    font-size: 1rem;
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
@@ -271,5 +268,121 @@
   
   .font-material-icons {
     font-family: var(--font-material-icons);
+  }
+}
+
+body, body *:not(.material-icons):not(.font-material-icons) {
+  font-family: var(--font-anek) !important;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  background: var(--white);
+}
+
+button {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+input, select, textarea {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+[class~="text-xs"], [class~="text-sm"] {
+  font-size: 1rem !important;
+  line-height: 1.4;
+}
+
+[class*="uppercase"] {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.italic, em {
+  font-style: normal !important;
+}
+
+[class*="text-[#D4755B]"],
+[class*="text-[#B86851]"],
+[class*="text-[#C05621]"],
+[class*="text-[#EC4613]"] {
+  color: var(--ganga-teal) !important;
+}
+
+[class*="bg-[#D4755B]"],
+[class*="bg-[#B86851]"],
+[class*="bg-[#C05621]"],
+[class*="bg-[#EC4613]"] {
+  background-color: var(--ganga-teal) !important;
+}
+
+[class*="border-[#D4755B]"],
+[class*="border-[#B86851]"],
+[class*="border-[#C05621]"],
+[class*="border-[#EC4613]"] {
+  border-color: var(--ganga-teal) !important;
+}
+
+[class*="text-[#221410]"],
+[class*="text-[#111827]"],
+[class*="text-[#1C1B1A]"],
+[class*="text-[#374151]"],
+[class*="text-[#4b5563]"],
+[class*="text-[#4B5563]"],
+[class*="text-[#5A5856]"],
+[class*="text-[#6B7280]"],
+[class*="text-[#6b7280]"],
+[class*="text-[#64748B]"],
+[class*="text-[#9CA3AF]"],
+[class*="text-[#9ca3af]"],
+[class*="text-[#94A3B8]"] {
+  color: var(--shivalik-slate) !important;
+}
+
+[class*="text-white/30"],
+[class*="text-white/40"],
+[class*="text-white/50"],
+[class*="text-white/60"],
+[class*="text-white/70"],
+[class*="text-white/80"] {
+  color: #FFFFFF !important;
+}
+
+[class*="bg-[#221410]"],
+[class*="bg-[#111827]"],
+[class*="bg-[#1C1B1A]"],
+[class*="bg-[#1E293B]"] {
+  background-color: var(--shivalik-slate) !important;
+}
+
+[class*="bg-[#E6E0DA]"],
+[class*="bg-[#FAF8F4]"],
+[class*="bg-[#F8F6F6]"],
+[class*="bg-[#F9F7F2]"],
+[class*="bg-[#F2EFE9]"],
+[class*="bg-[#F5F1E8]"],
+[class*="bg-[#F0EBE5]"] {
+  background-color: var(--ghat-stone) !important;
+}
+
+[class*="border-[#E6E0DA]"],
+[class*="border-[#E6D5C3]"],
+[class*="border-[#D4C4BC]"] {
+  border-color: #D0D5D1 !important;
+}
+
+a[href^="tel:"],
+a[href*="wa.me"] {
+  min-height: 48px;
+}
+
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: 76px;
   }
 }
