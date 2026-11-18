@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-  ? `${import.meta.env.VITE_API_BASE_URL}/api`
-  : 'http://localhost:4000/api';
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api'
+  : import.meta.env.VITE_API_BASE_URL
+    ? `${import.meta.env.VITE_API_BASE_URL}/api`
+    : 'http://localhost:4000/api';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +14,7 @@ const apiClient = axios.create({
 // Properties (CRUD — admin-managed listings)
 export const propertiesAPI = {
   getAll: () =>
-    apiClient.get('/products/list'),
+    apiClient.get('/products/list', { timeout: 30000 }),
 
   getHomepage: () =>
     apiClient.get('/products/homepage'),

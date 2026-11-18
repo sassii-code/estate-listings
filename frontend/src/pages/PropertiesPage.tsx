@@ -112,8 +112,10 @@ const PropertiesPage: React.FC = () => {
         setLoading(true);
         setError(null);
         const { data } = await propertiesAPI.getAll();
-        if (data.success && data.property) {
+        if (data.success && Array.isArray(data.property)) {
           setProperties(data.property);
+        } else {
+          setError('Failed to load properties. Please try again later.');
         }
       } catch (err: any) {
         console.error('Failed to fetch properties:', err);
